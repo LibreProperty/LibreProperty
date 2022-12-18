@@ -2,13 +2,16 @@
 
 {% block content %}
 <main>
-    <h1>Vacation/Short-Term Rental Management</h1>
     <div class="row">
         <div class="col-8 fs-5">
+            <h1>Vacation/Short-Term Rental Management</h1>
             <p>
-                Tired of managing all your listings across Airbnb, Vrbo and Booking.com?
+                Tired of managing all your listings across Airbnb, Vrbo and Booking.com?</br>
                 Manage your short-term rental properties with ease and increase your revenue.
             </p>
+        </div>
+        <div class="col-4">
+            <img height="200" src="{{ url_for('static', filename='vacation-beach-house.jpeg') }}" />
         </div>
     </div>
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
