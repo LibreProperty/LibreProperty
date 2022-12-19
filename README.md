@@ -1,4 +1,4 @@
-# ![Logo](static/favicon.png?raw=true "Logo") LibreProperty: Short-Term Rental Management
+# ![Logo](static/favicon.png?raw=true "Logo") LibreProperty: Short-Term Property Management
 Note: This README is more of a roadmap since there is no working prototype yet.
 
 LibreProperty is free and open source property management software focused on vacation
