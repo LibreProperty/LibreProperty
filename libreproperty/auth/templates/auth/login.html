@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-6 fs-5">
+            <h1>Login</h1>
+            <p>
+                Start earning more with your properties by signing up for a free account. Your first
+                property is free. See our pricing for more details.
+            </p>
+        </div>
+        <div class="col-6">
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert">
+                    x
+                </button>
+                {{ message }}
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</main>
+{% endblock %}

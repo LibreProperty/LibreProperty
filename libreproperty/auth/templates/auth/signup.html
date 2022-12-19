@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-6 fs-5">
+            <h1>Sign Up for a Free account</h1>
+            <p>
+                Start earning more with your properties by signing up for a free account. Your first
+                property is free. See our pricing for more details.
+            </p>
+        </div>
+        <div class="col-6">
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            <form method="POST" action="/signup">
+                {{ form.csrf_token }}
+                <div class="mb-3">
+                    {{ form.name.label }}
+                    {{ form.name(class='form-control') }}
+                    {% if form.name.errors %}
+                    <ul class="errors">
+                        {% for error in form.name.errors %}
+                        <li>{{ error }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label }}
+                    {{ form.email(placeholder='youremail@example.com', class='form-control') }}
+                    {% if form.email.errors %}
+                    <ul class="errors">
+                        {% for error in form.email.errors %}
+                        <li>{{ error }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label }}
+                    {{ form.password(class='form-control') }}
+                    {% if form.password.errors %}
+                    <ul class="errors">
+                        {% for error in form.password.errors %}
+                        <li>{{ error }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+
+            <div class="login-signup mt-3">
+                <div>
+                    <span>Already have an account?</span>
+                    <a href="{{ url_for('auth_bp.login') }}">Log in.</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
