@@ -5,6 +5,7 @@ from flask_login import LoginManager
 
 from libreproperty.auth import auth_bp, User
 from libreproperty.pages import pages_bp
+from libreproperty.dashboard import dashboard_bp
 
 login_manager = LoginManager()
 
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)
+    app.register_blueprint(dashboard_bp)
     from libreproperty import db
     db.init_app(app)
     with app.app_context():

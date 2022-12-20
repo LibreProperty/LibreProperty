@@ -31,7 +31,7 @@ def signup():
             db.session.add(user)
             db.session.commit()  # Create new user
             login_user(user)  # Log in as newly created user
-            return redirect(url_for('pages_bp.index'))
+            return redirect(url_for('dashboard_bp.index'))
         flash('A user already exists with that email address.')
     return render_template('auth/signup.html', form=form)
 
@@ -39,7 +39,7 @@ def signup():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('pages_bp.index'))
+        return redirect(url_for('dashboard_bp.index'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -49,7 +49,7 @@ def login():
             next_page = request.args.get('next')
             if next_page and not is_safe_url(next):
                 return abort(400)
-            return redirect(next_page or url_for('pages_bp.index'))
+            return redirect(next_page or url_for('dashboard_bp.index'))
         flash('Invalid username/password combination')
         return redirect(url_for('auth_bp.login'))
 
@@ -60,4 +60,4 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('pages_bp.index'))
+    return redirect(url_for('dashboard_bp.index'))
