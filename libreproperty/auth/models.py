@@ -1,5 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from sqlalchemy.sql import func
 
 from libreproperty.db import db
 
@@ -10,7 +11,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(200), primary_key=False, unique=False, nullable=False)
     name = db.Column(db.String, nullable=True)
     email_verified = db.Column(db.Boolean, unique=False, default=False)
-    created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True)
+    created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True, server_default=func.now())
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
 
     def __init__(self, name, email, password):
