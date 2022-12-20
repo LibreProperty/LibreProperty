@@ -23,32 +23,37 @@
                  class="align-top"/>
             <span class="align-bottom">LibreProperty</span>
         </a>
-        <div class="collapse navbar-collapse col-6" id="navbarNav">
-            <ul class="navbar-nav">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav col-6">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
             </ul>
+            <div class="col-4">
+                {% if current_user.is_authenticated %}
+                User: {{ current_user.name }}
+                <a href="/logout" class="ms-1 btn btn-outline-primary">
+                    Logout
+                </a>
+                {% else %}
+                <a href="/signup" class="btn btn-outline-success">
+                    Sign Up
+                </a>
+                <a href="/login" class="ms-1 btn btn-outline-primary">
+                    Login
+                </a>
+                {% endif %}
+                <a href="https://github.com/LibreProperty/LibreProperty" class="ms-4 btn btn-outline-dark"
+                   rel="nofollow external" target="_blank">
+                    <i class="bi bi-github pe-1"></i> GitHub
+                </a>
+            </div>
+
         </div>
-        <div class="col-4">
-            {% if current_user.is_authenticated %}
-            User: {{ current_user.name }}
-            <a href="/logout" class="ms-1 btn btn-outline-primary">
-                Logout
-            </a>
-            {% else %}
-            <a href="/signup" class="btn btn-outline-success">
-                Sign Up
-            </a>
-            <a href="/login" class="ms-1 btn btn-outline-primary">
-                Login
-            </a>
-            {% endif %}
-            <a href="https://github.com/LibreProperty/LibreProperty" class="ms-4 btn btn-outline-dark"
-               rel="nofollow external" target="_blank">
-                <i class="bi bi-github pe-1"></i> GitHub
-            </a>
-        </div>
+
     </div>
 </nav>
 
