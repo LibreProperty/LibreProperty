@@ -10,19 +10,45 @@
                 property is free. See our pricing for more details.
             </p>
         </div>
+
         <div class="col-6">
             {% for message in get_flashed_messages() %}
-            <div class="alert alert-warning">
-                <button
-                        type="button"
-                        class="close"
-                        data-dismiss="alert">
-                    x
-                </button>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="mb-3">
+                    {{ form.email.label }}
+                    {{ form.email(placeholder='youremail@example.com', class='form-control') }}
+                    {% if form.email.errors %}
+                    <ul class="errors">
+                        {% for error in form.email.errors %}
+                        <li>{{ error }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label }}
+                    {{ form.password(class='form-control') }}
+                    {% if form.password.errors %}
+                    <ul class="errors">
+                        {% for error in form.password.errors %}
+                        <li>{{ error }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
 
+            <div class="login-signup mt-3">
+                <div>
+                    <span>Don't have an account yet?</span>
+                    <a href="{{ url_for('auth_bp.login') }}">Sign Up instead.</a>
+                </div>
+            </div>
         </div>
     </div>
 </main>
