@@ -1,7 +1,7 @@
 from urllib.parse import urlparse, urljoin
 
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 from libreproperty import db
 from .forms import SignupForm, LoginForm
@@ -47,10 +47,17 @@ def login():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             next_page = request.args.get('next')
-            if not is_safe_url(next):
+            if next_page and not is_safe_url(next):
                 return abort(400)
             return redirect(next_page or url_for('pages_bp.index'))
         flash('Invalid username/password combination')
         return redirect(url_for('auth_bp.login'))
 
     return render_template('auth/login.html', form=form)
+
+
+@auth_bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('pages_bp.index'))
