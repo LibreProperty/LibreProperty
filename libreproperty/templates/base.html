@@ -12,23 +12,47 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}"/>
 </head>
 <body>
 
-<div class="container">
-    <header class="justify-content-center d-flex flex-wrap pb-3 mb-5 border-bottom">
-        <a href="/" class="d-flex me-md-auto text-dark text-decoration-none">
-            <img class="mt-2" src="{{ url_for('static', filename='logo-w45.png') }}" height="45"/>
-            <div class="fs-4 mx-3 mt-3">
-                <span>LibreProperty</span>
-            </div>
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container">
+        <a class="col-2 navbar-brand pt-0" href="/">
+            <img src="{{ url_for('static', filename='logo-w45.png') }}" height="35"
+                 class="align-top"/>
+            <span class="align-bottom">LibreProperty</span>
         </a>
-        <a href="https://github.com/LibreProperty/LibreProperty" class="mx-3 mt-3 me-5 btn btn-outline-primary"
-           rel="nofollow external" target="_blank">
-            <i class="bi bi-github pe-1"></i> GitHub
-        </a>
-    </header>
+        <div class="collapse navbar-collapse col-6" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-4">
+            {% if current_user.is_authenticated %}
+            User: {{ current_user.name }}
+            <a href="/logout" class="ms-1 btn btn-outline-primary">
+                Logout
+            </a>
+            {% else %}
+            <a href="/signup" class="btn btn-outline-success">
+                Sign Up
+            </a>
+            <a href="/login" class="ms-1 btn btn-outline-primary">
+                Login
+            </a>
+            {% endif %}
+            <a href="https://github.com/LibreProperty/LibreProperty" class="ms-4 btn btn-outline-dark"
+               rel="nofollow external" target="_blank">
+                <i class="bi bi-github pe-1"></i> GitHub
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-3">
     {% block content %}
     {% endblock %}
     <footer class="pt-5 my-5 text-muted border-top">
