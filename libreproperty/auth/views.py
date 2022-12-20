@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from urllib.parse import urlparse, urljoin
+
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from flask_login import login_user, current_user
 
 from libreproperty import db
@@ -6,6 +8,13 @@ from .forms import SignupForm, LoginForm
 from .models import User
 
 auth_bp = Blueprint('auth_bp', __name__, template_folder='templates')
+
+
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
 
 
 @auth_bp.route('/signup', methods=["GET", "POST"])
@@ -38,6 +47,8 @@ def login():
         if user and user.check_password(password=form.password.data):
             login_user(user)
             next_page = request.args.get('next')
+            if not is_safe_url(next):
+                return abort(400)
             return redirect(next_page or url_for('pages_bp.index'))
         flash('Invalid username/password combination')
         return redirect(url_for('auth_bp.login'))
