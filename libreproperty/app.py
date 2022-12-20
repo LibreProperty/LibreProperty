@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, flash, redirect, url_for
 from flask_login import LoginManager
 
 from libreproperty.auth import auth_bp, User
@@ -26,8 +26,8 @@ def unauthorized():
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-    app.config['SECRET_KEY'] = os.urandom(32)
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
+    app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)

@@ -8,6 +8,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '$PROJECT_ID', '--image', 'gcr.io/$PROJECT_ID/$PROJECT_ID', '--region', 'us-central1']
+  args: ['run', 'deploy', '$PROJECT_ID', '--image', 'gcr.io/$PROJECT_ID/$PROJECT_ID',
+         '--update-secrets=SECRET_KEY=secret-key:latest,DATABASE=database:latest', '--region', 'us-central1']
 images:
 - gcr.io/$PROJECT_ID/$PROJECT_ID

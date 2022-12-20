@@ -3,3 +3,4 @@
 libreproperty.iml
 instance
 *.pyc
+.env
