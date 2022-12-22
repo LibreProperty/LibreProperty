@@ -5,6 +5,9 @@
     <div class="row">
         <div class="col-lg-8 col-12-sm fs-5">
             <h1>Dashboard</h1>
+            {% if listings|length == 0 %}
+            <p>Create a listing</p>
+            {% endif %}
             <p>
                 Tired of managing all your listings across Airbnb, Vrbo and Booking.com?</br>
                 Manage your short-term rental properties with ease and increase your revenue.

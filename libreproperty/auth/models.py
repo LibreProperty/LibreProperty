@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
     email_verified = db.Column(db.Boolean, unique=False, default=False)
     created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True, server_default=func.now())
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
+    listings = db.relationship("Listing", back_populates="user")
 
     def __init__(self, name, email, password):
         self.name = name
