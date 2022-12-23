@@ -9,6 +9,7 @@ from libreproperty.dashboard import dashboard_bp
 from libreproperty import models
 
 login_manager = LoginManager()
+login_manager.login_view = "auth_bp.login"
 
 
 @login_manager.user_loader
