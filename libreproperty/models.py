@@ -17,6 +17,11 @@ class BasicMixin(object):
 
 class Listing(db.Model, BasicMixin):
     title = sa.Column(sa.String, nullable=False)
+    street = sa.Column(sa.String)
+    city = sa.Column(sa.String)
+    state = sa.Column(sa.String)
+    postal_code = sa.Column(sa.String)
+    country = sa.Column(sa.String)
     description = sa.Column(sa.Text)
     source = sa.Column(sa.String)
     source_id = sa.Column(sa.String)

@@ -5,3 +5,4 @@ Flask-WTF
 email_validator
 flask-login
 psycopg2
+pycountry

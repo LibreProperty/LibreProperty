@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <main>
     <div class="row">
         <div class="col-4 fs-5">
@@ -19,17 +20,24 @@
             {% endfor %}
             <form method="POST">
                 {{ form.csrf_token }}
-                {% for field in form %}
+                {% for field in form if field.widget.input_type != "hidden" %}
                 <div class="mb-3 row">
-                    {{ field.label(class='col-sm-3 col-form-label') }}
+                    <div class="col-sm-3">
+                        {{ field.label(class='col-form-label') }}
+                        {% if field.description %}
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                           title="{{field.description}}"></i>
+                        {% endif %}
+                    </div>
                     <div class="col-sm-9">
-                    {{ field(class='form-control') }}
-                    {% if field.errors %}
-                    <ul class="errors">
-                        {% for error in field.errors %}
-                        <li>{{ error }}</li>{% endfor %}
-                    </ul>
-                    {% endif %}
+                        {{ field(class='form-control') }}
+                        {% if field.errors %}
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}
