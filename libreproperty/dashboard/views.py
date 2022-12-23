@@ -16,8 +16,15 @@ def index():
     return render_template("dashboard/index.html", listings=listings)
 
 
-@dashboard_bp.route("/create-listing")
+@dashboard_bp.route("/create-listing", methods=["GET", "POST"])
 @login_required
 def create_listing():
     form = ListingForm()
+    if form.validate_on_submit():
+        listing = Listing()
+        listing.user_id = current_user.id
+        form.populate_obj(listing)
+        db.session.add(listing)
+        db.session.commit()
+        return redirect(url_for('dashboard_bp.index'))
     return render_template("dashboard/create_listing.html", form=form)

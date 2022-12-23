@@ -6,3 +6,4 @@ email_validator
 flask-login
 psycopg2
 pycountry
+wtform_address

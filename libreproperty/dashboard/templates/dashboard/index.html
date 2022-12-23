@@ -6,58 +6,16 @@
         <div class="col-lg-8 col-12-sm fs-5">
             <h1>Dashboard</h1>
             {% if listings|length == 0 %}
-            <p>Create a listing</p>
+            <p>You don't have any listings yet.</p>
+            <a class="btn btn-primary" href="{{ url_for('dashboard_bp.create_listing') }}">Create your first listing</a>
             {% endif %}
-            <p>
-                Tired of managing all your listings across Airbnb, Vrbo and Booking.com?</br>
-                Manage your short-term rental properties with ease and increase your revenue.
-            </p>
+            {% for listing in listings %}
+            {{ listing.title }}
+            {% endfor %}
         </div>
         <div class="col-4 d-none d-sm-block">
             <img height="200" src="{{ url_for('static', filename='vacation-beach-house.jpeg') }}"/>
         </div>
     </div>
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-        <div class="feature col">
-            <h2>Channel Management</h2>
-            <p>
-                Manage all your listings across Airbnb, Vrbo and others through LibreOffice. Increase
-                your occupancy by reaching more channels and keep your listings up to date across
-                all channels.
-            </p>
-        </div>
-        <div class="feature col">
-            <h2>One calendar to rule all</h2>
-            <p>
-                Prevent double bookings and adjust prices across all channels by having a single calendar.
-                No more grumpy guests with cancelled bookings.
-            </p>
-        </div>
-        <div class="feature col">
-            <h2>Smart Lock Integration</h2>
-            <p>
-                Provide a superior secure guest experience with a fully automated Smart Lock solution for
-                seamless check-ins.
-                Automatically send a unique keycode for each booking and revoke after booking ended.
-            </p>
-        </div>
-    </div>
-
-    <div class="row mb-5 justify-content-center">
-        <div class="col-lg-5 col-sm-12">
-            <h3 class="px-4">Want to know when we launch?</h3>
-        </div>
-        <div class="col-lg-6 col-sm-12">
-            <a href="/signup" class="btn btn-success btn-lg mx-3 px-4">
-                Sign Up for Free
-            </a>
-            or
-            <a href="https://github.com/LibreProperty/LibreProperty" class="btn btn-primary btn-lg mx-3 px-4"
-               rel="nofollow external" target="_blank">
-                <i class="bi bi-github pe-3"></i> Follow the GitHub repo
-            </a>
-        </div>
-    </div>
-
 </main>
 {% endblock %}

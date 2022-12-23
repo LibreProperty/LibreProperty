@@ -5,10 +5,11 @@
 <main>
     <div class="row">
         <div class="col-4 fs-5">
-            <h1>Create a listing</h1>
+            <h2>Create a listing</h2>
             <p>
-                Start earning more with your properties by signing up for a free account, so you get
-                notified when LibreProperty is ready for action. Your first property is free.
+                A listing allows you to create a dedicated booking website for your
+                property. You will also be able to sync it to other channels such as
+                Airbnb, Vrbo and others.
             </p>
         </div>
         <div class="col-8">
@@ -25,7 +26,7 @@
                     <div class="col-sm-3">
                         {{ field.label(class='col-form-label') }}
                         {% if field.description %}
-                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                        <i class="p-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                            title="{{field.description}}"></i>
                         {% endif %}
                     </div>
@@ -41,9 +42,8 @@
                     </div>
                 </div>
                 {% endfor %}
-                <button type="submit" class="btn btn-primary">Create Listing</button>
+                <button type="submit" class="btn btn-primary">Submit and continue</button>
             </form>
-
         </div>
     </div>
 </main>
