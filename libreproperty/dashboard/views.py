@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect
+from flask import Blueprint, render_template, url_for, redirect, abort, request
 from flask_login import login_required, current_user
 
 from libreproperty.models import Listing
@@ -28,3 +28,22 @@ def create_listing():
         db.session.commit()
         return redirect(url_for('dashboard_bp.index'))
     return render_template("dashboard/create_listing.html", form=form)
+
+
+@dashboard_bp.route("/update-listing/<listing_id>", methods=["GET", "POST"])
+@login_required
+def update_listing(listing_id):
+    listing_id = int(listing_id)
+    listing = db.session.execute(db.select(Listing).filter(
+        Listing.id == listing_id)).scalar()
+    if listing.user_id != current_user.id:
+        return abort(403)
+    form = ListingForm()
+    if request.method == "GET":
+        form.process(obj=listing)
+    if form.validate_on_submit():
+        listing.user_id = current_user.id
+        form.populate_obj(listing)
+        db.session.commit()
+        return redirect(url_for('dashboard_bp.index'))
+    return render_template("dashboard/update_listing.html", form=form)

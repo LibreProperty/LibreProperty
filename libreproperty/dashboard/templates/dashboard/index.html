@@ -9,7 +9,7 @@
             <p>You don't have any listings yet.</p>
             <a class="btn btn-primary" href="{{ url_for('dashboard_bp.create_listing') }}">Create your first listing</a>
             {% else %}
-            <div class="listings border">
+            <div class="listings">
                 <h2>Your listings</h2>
                 <table class="table table-hover">
                     <thead>
@@ -24,8 +24,7 @@
                         <td>{{ listing.title }}</td>
                         <td>{{ listing.city }}</td>
                         <td>
-                            <a class="ms-1 btn btn-primary btn-sm">Create Website</a>
-                            <a class="ms-1 btn btn-primary btn-sm">Modify</a>
+                            <a class="ms-1 btn btn-primary btn-sm" href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}">Modify</a>
                             <a class="ms-1 btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
