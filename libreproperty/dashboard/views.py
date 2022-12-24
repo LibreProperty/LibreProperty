@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect, abort, request
+from flask import Blueprint, render_template, url_for, redirect, abort, request, flash
 from flask_login import login_required, current_user
 
 from libreproperty.models import Listing
@@ -45,5 +45,6 @@ def update_listing(listing_id):
         listing.user_id = current_user.id
         form.populate_obj(listing)
         db.session.commit()
-        return redirect(url_for('dashboard_bp.index'))
+        flash('Update was successful', 'success')
+        return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
     return render_template("dashboard/update_listing.html", form=form)
