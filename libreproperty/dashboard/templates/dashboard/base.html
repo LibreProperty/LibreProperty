@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block nav_items %}
+<li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard_bp.index') }}">Dashboard</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="{{ url_for('dashboard_bp.create_listing') }}">Create Listing</a>
+</li>
+{% endblock %}
