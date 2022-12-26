@@ -2,7 +2,7 @@ import datetime
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, BooleanField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, Optional
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
 from markupsafe import Markup
@@ -38,25 +38,27 @@ class ListingForm(FlaskForm):
 
 
 class ListingPricingForm(FlaskForm):
-    base_price = IntegerField()
-    weekend_price = IntegerField()
-    currency = SelectField(default="USD", choices=(('USD', 'USD'), ('EUR', 'EUR')))
-    monthly_price_factor = DecimalRangeField(default=1, places=2)
-    weekly_price_factor = DecimalRangeField(default=1, places=2)
-    guests_included_in_regular_fee = IntegerField()
-    extra_person_fee = IntegerField()
-    cleaning_fee = IntegerField()
-    security_deposit = IntegerField()
+    base_price = IntegerField(validators=[Optional()])
+    weekend_price = IntegerField(validators=[Optional()])
+    currency = SelectField(default="USD", choices=(('USD', 'USD'), ('EUR', 'EUR')),
+                           validators=[Optional()])
+    monthly_price_factor = DecimalRangeField(default=1, places=2, validators=[Optional()])
+    weekly_price_factor = DecimalRangeField(default=1, places=2, validators=[Optional()])
+    guests_included_in_regular_fee = IntegerField(validators=[Optional()])
+    extra_person_fee = IntegerField(validators=[Optional()])
+    cleaning_fee = IntegerField(validators=[Optional()])
+    security_deposit = IntegerField(validators=[Optional()])
 
 
 class ListingPropertyDetailsForm(FlaskForm):
-    accommodates = IntegerField(description="The amount of people that are allowed to stay in your property")
-    bedrooms = IntegerField()
-    beds = IntegerField()
-    bathrooms = IntegerField()
-    minimum_age = IntegerField()
-    min_nights = IntegerField()
-    max_nights = IntegerField()
+    accommodates = IntegerField(description="The amount of people that are allowed to stay in your property",
+                                validators=[Optional()])
+    bedrooms = IntegerField(validators=[Optional()])
+    beds = IntegerField(validators=[Optional()])
+    bathrooms = IntegerField(validators=[Optional()])
+    minimum_age = IntegerField(validators=[Optional()])
+    min_nights = IntegerField(validators=[Optional()])
+    max_nights = IntegerField(validators=[Optional()])
     cancellation_policy = SelectField(
         choices=[('flexible', 'Flexible'), ('moderate', 'Moderate'), ('firm', 'Firm'),
                  ('strict', 'Strict'), ('strict-long-term', 'Strict Long Term'),

@@ -19,31 +19,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
-            <form method="POST">
-                {{ form.csrf_token }}
-                {% for field in form if field.widget.input_type != "hidden" %}
-                <div class="mb-3 row">
-                    <div class="col-sm-3">
-                        {{ field.label(class='col-form-label') }}
-                        {% if field.description %}
-                        <i class="p-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                           title="{{field.description}}"></i>
-                        {% endif %}
-                    </div>
-                    <div class="col-sm-9">
-                        {{ field(class='form-control') }}
-                        {% if field.errors %}
-                        <ul class="errors">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Submit and continue</button>
-            </form>
+            {% include 'dashboard/listing_basic_form.html' %}
         </div>
     </div>
 </main>

@@ -13,37 +13,38 @@
             </p>
         </div>
         <div class="col-8">
+            <div class="card-group">
+                <div class="card w-25">
+                    <div class="card-body">
+                        <p class="card-text">Set your nightly base rate and special rates for e.g. weekends.</p>
+                        <a href="{{ url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id) }}"
+                           type="submit" class="btn btn-success">Manage pricing</a>
+                    </div>
+                </div>
+                <div class="card w-25">
+                    <div class="card-body">
+                        <p class="card-text">Provide property details such as amount of guests and ameneties</p>
+                        <a href="{{ url_for('dashboard_bp.update_listing_property_details', listing_id=listing.id) }}"
+                           type="submit" class="btn btn-success">Manage Property Details</a>
+                    </div>
+                </div>
+                <div class="card w-25">
+                    <div class="card-body">
+                        <p class="card-text">Upload photos of your property to let your property stand out</p>
+                        <a href="{{ url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id) }}"
+                           type="submit" class="btn btn-success">Manage Photos</a>
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <h3>Basic Details</h3>
             {% for category, message in get_flashed_messages(with_categories=True) %}
             <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
-            <form method="POST">
-                {{ form.csrf_token }}
-                {% for field in form if field.widget.input_type != "hidden" %}
-                <div class="mb-3 row">
-                    <div class="col-sm-3">
-                        {{ field.label(class='col-form-label') }}
-                        {% if field.description %}
-                        <i class="p-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                           title="{{field.description}}"></i>
-                        {% endif %}
-                    </div>
-                    <div class="col-sm-9">
-                        {{ field(class='form-control') }}
-                        {% if field.errors %}
-                        <ul class="errors">
-                            {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-                <button type="submit" class="btn btn-primary">Submit and continue</button>
-            </form>
+            {% include 'dashboard/listing_basic_form.html' %}
         </div>
     </div>
 </main>

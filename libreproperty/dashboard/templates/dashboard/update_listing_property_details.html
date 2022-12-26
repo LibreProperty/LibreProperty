@@ -1,0 +1,50 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<main>
+    <div class="row">
+        <div class="col-4 fs-5">
+            <h2>Update property details of {{ listing.title }}</h2>
+            <p>
+                A listing allows you to create a dedicated booking website for your
+                property. You will also be able to sync it to other channels such as
+                Airbnb, Vrbo and others.
+            </p>
+        </div>
+        <div class="col-8">
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            <form method="POST">
+                {{ form.csrf_token }}
+                {% for field in form if field.widget.input_type != "hidden" %}
+                <div class="mb-3 row">
+                    <div class="col-sm-3">
+                        {{ field.label(class='col-form-label') }}
+                        {% if field.description %}
+                        <i class="p-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                           title="{{field.description}}"></i>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-9">
+                        {{ field(class='form-control') }}
+                        {% if field.errors %}
+                        <ul class="errors">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Submit and continue</button>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}
