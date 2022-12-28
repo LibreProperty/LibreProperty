@@ -1,6 +1,5 @@
-from functools import wraps
-
-from flask import Blueprint, render_template, url_for, redirect, abort, request, flash
+import boto3
+from flask import Blueprint, current_app, render_template, url_for, redirect, abort, request, flash
 from flask_login import login_required, current_user
 
 from libreproperty.models import Listing
@@ -94,6 +93,15 @@ def update_listing_photos(listing_id):
     if request.method == "GET":
         form.process(obj=listing)
     if form.validate_on_submit():
+        s3 = boto3.client(
+            "s3",
+            endpoint_url=current_app.config.get("S3_ENDPOINT"),
+            config=boto3.session.Config(signature_version='s3v4'),
+            aws_session_token=None,
+            verify=current_app.config.get("S3_VERIFY")
+        )
+        bucket = current_app.config.get("BUCKET")
+        
         form.populate_obj(listing)
         db.session.commit()
         flash('Property details photos were updated successfully', 'success')

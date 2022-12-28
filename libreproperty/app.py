@@ -27,10 +27,17 @@ def unauthorized():
     return redirect(url_for('auth_bp.login'))
 
 
+def environ_get_bool(name: str) -> bool:
+    return os.getenv(name, 'False').lower() in ('true', '1', 't')
+
+
 def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
+    app.config['S3_ENDPOINT'] = os.environ.get("S3_ENDPOINT", "http://localhost:9000")
+    app.config['S3_VERIFY'] = environ_get_bool("S3_VERIFY")
+    app.config['BUCKET'] = os.environ.get("BUCKET", "libreproperty-images")
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)
