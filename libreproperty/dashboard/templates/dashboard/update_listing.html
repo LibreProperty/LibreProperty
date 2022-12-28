@@ -5,8 +5,9 @@
 <main>
     <div class="row">
         <div class="col-4 fs-5">
-            <h2>Update existing listing</h2>
+            <h2>Updating listing: {{listing.title}}</h2>
             <p>
+
                 A listing allows you to create a dedicated booking website for your
                 property. You will also be able to sync it to other channels such as
                 Airbnb, Vrbo and others.
@@ -14,30 +15,37 @@
         </div>
         <div class="col-8">
             <div class="card-group">
-                <div class="card w-25">
+                <div class="card">
                     <div class="card-body">
-                        <p class="card-text">Set your nightly base rate and special rates for e.g. weekends.</p>
+                        <p class="card-text">Update title, description and address</p>
+                        <a href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}"
+                           type="submit" class="btn btn-success">Manage basic</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">Set your base rate and special rates</p>
                         <a href="{{ url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id) }}"
                            type="submit" class="btn btn-success">Manage pricing</a>
                     </div>
                 </div>
                 <div class="card w-25">
                     <div class="card-body">
-                        <p class="card-text">Provide property details such as amount of guests and ameneties</p>
+                        <p class="card-text">Set property details: # of guests and amenities</p>
                         <a href="{{ url_for('dashboard_bp.update_listing_property_details', listing_id=listing.id) }}"
-                           type="submit" class="btn btn-success">Manage Property Details</a>
+                           type="submit" class="btn btn-success">Manage Details</a>
                     </div>
                 </div>
                 <div class="card w-25">
                     <div class="card-body">
-                        <p class="card-text">Upload photos of your property to let your property stand out</p>
-                        <a href="{{ url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id) }}"
+                        <p class="card-text">Upload photos of your property</p>
+                        <a href="{{ url_for('dashboard_bp.update_listing_photos', listing_id=listing.id) }}"
                            type="submit" class="btn btn-success">Manage Photos</a>
                     </div>
                 </div>
             </div>
             <hr/>
-            <h3>Basic Details</h3>
+            <h3>{{ title }}</h3>
             {% for category, message in get_flashed_messages(with_categories=True) %}
             <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
                 {{ message }}

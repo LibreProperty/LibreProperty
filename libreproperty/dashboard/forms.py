@@ -1,7 +1,8 @@
 import datetime
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, BooleanField
+from flask_wtf.file import FileField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, MultipleFileField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
@@ -66,3 +67,8 @@ class ListingPropertyDetailsForm(FlaskForm):
     check_in_time = TimeField('Check-in Time', default=datetime.time(hour=13))
     check_out_time = TimeField('Check-out Time', default=datetime.time(hour=10))
     amenities = SelectMultipleField(choices=amenities, widget=select_multi_checkbox)
+
+
+class ListingPhotosForm(FlaskForm):
+    photo = FileField()
+    caption = StringField()

@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from libreproperty.models import Listing
 from libreproperty import db
 
-from .forms import ListingForm, ListingPricingForm, ListingPropertyDetailsForm
+from .forms import ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotosForm
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -49,13 +49,11 @@ def update_listing(listing_id):
     if request.method == "GET":
         form.process(obj=listing)
     if form.validate_on_submit():
-        listing.user_id = current_user.id
         form.populate_obj(listing)
         db.session.commit()
         flash('Update was successful', 'success')
-        print(listing_id)
         return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
-    return render_template("dashboard/update_listing.html", form=form, listing=listing)
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Update Basic Info")
 
 
 @dashboard_bp.route("/update-listing/<listing_id>/pricing", methods=["GET", "POST"])
@@ -66,12 +64,11 @@ def update_listing_pricing(listing_id):
     if request.method == "GET":
         form.process(obj=listing)
     if form.validate_on_submit():
-        listing.user_id = current_user.id
         form.populate_obj(listing)
         db.session.commit()
         flash('Pricing update was successful', 'success')
         return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
-    return render_template("dashboard/update_listing_pricing.html", form=form, listing=listing)
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Update Pricing")
 
 
 @dashboard_bp.route("/update-listing/<listing_id>/property-details", methods=["GET", "POST"])
@@ -82,9 +79,23 @@ def update_listing_property_details(listing_id):
     if request.method == "GET":
         form.process(obj=listing)
     if form.validate_on_submit():
-        listing.user_id = current_user.id
         form.populate_obj(listing)
         db.session.commit()
         flash('Property details update was successful', 'success')
+        return redirect(url_for('dashboard_bp.update_listing_property_details', listing_id=listing_id))
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Update Property Details")
+
+
+@dashboard_bp.route("/update-listing/<listing_id>/photos", methods=["GET", "POST"])
+@login_required
+def update_listing_photos(listing_id):
+    listing = get_secure_listing(listing_id)
+    form = ListingPhotosForm()
+    if request.method == "GET":
+        form.process(obj=listing)
+    if form.validate_on_submit():
+        form.populate_obj(listing)
+        db.session.commit()
+        flash('Property details photos were updated successfully', 'success')
         return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
-    return render_template("dashboard/update_listing_property_details.html", form=form, listing=listing)
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Add a photo")
