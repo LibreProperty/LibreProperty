@@ -1,0 +1,30 @@
+<div class="card-group">
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Update title, description and address</p>
+            <a href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}"
+               type="submit" class="btn btn-success">Manage basic</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Set your base rate and special rates</p>
+            <a href="{{ url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id) }}"
+               type="submit" class="btn btn-success">Manage pricing</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Set property details: # of guests and amenities</p>
+            <a href="{{ url_for('dashboard_bp.update_listing_property_details', listing_id=listing.id) }}"
+               type="submit" class="btn btn-success">Manage Details</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Upload photos of your property</p>
+            <a href="{{ url_for('dashboard_bp.update_listing_photos', listing_id=listing.id) }}"
+               type="submit" class="btn btn-success">Manage Photos</a>
+        </div>
+    </div>
+</div>

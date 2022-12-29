@@ -1,8 +1,12 @@
+from random import choice
+from string import ascii_lowercase
+
 import boto3
 from flask import Blueprint, current_app, render_template, url_for, redirect, abort, request, flash
 from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 
-from libreproperty.models import Listing
+from libreproperty.models import Listing, Photo
 from libreproperty import db
 
 from .forms import ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotosForm
@@ -101,9 +105,13 @@ def update_listing_photos(listing_id):
             verify=current_app.config.get("S3_VERIFY")
         )
         bucket = current_app.config.get("BUCKET")
-        
-        form.populate_obj(listing)
+        random_str = ''.join(choice(ascii_lowercase) for i in range(4))
+        key = f'{str(listing.id)}-{random_str}-{secure_filename(form.photo.data.filename)}'
+        s3.upload_fileobj(form.photo.data.stream, bucket, key)
+        location = "s3://{bucket}/{key}"
+        photo = Photo(location=location, caption=form.caption.data, listing_id=listing.id)
+        db.session.add(photo)
         db.session.commit()
-        flash('Property details photos were updated successfully', 'success')
-        return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
+        flash(f'Property photo {key} was added successfully', 'success')
+        return redirect(url_for('dashboard_bp.update_listing_photos', listing_id=listing_id))
     return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Add a photo")
