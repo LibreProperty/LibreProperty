@@ -69,6 +69,14 @@ class ListingPropertyDetailsForm(FlaskForm):
     amenities = SelectMultipleField(choices=amenities, widget=select_multi_checkbox)
 
 
-class ListingPhotosForm(FlaskForm):
+class ListingPhotoForm(FlaskForm):
     photo = FileField(validators=[FileRequired()])
     caption = StringField()
+
+
+class HiddenIntegerField(IntegerField):
+    widget = widgets.HiddenInput()
+
+
+class ListingPhotoDeleteForm(FlaskForm):
+    photo_id = HiddenIntegerField(validators=[DataRequired()])

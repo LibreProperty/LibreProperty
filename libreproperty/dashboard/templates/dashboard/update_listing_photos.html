@@ -1,0 +1,40 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<main>
+    <div class="row">
+        <div class="col-4 fs-5">
+            <h2>Updating listing: {{listing.title}}</h2>
+            <p>
+
+                A listing allows you to create a dedicated booking website for your
+                property. You will also be able to sync it to other channels such as
+                Airbnb, Vrbo and others.
+            </p>
+        </div>
+        <div class="col-8">
+            {% include 'dashboard/update_listing_actions.html' %}
+            {% if listing.photos %}
+            <h1>Currently active photos</h1>
+            {% for photo in listing.photos %}
+            <form method="POST" action="{{ url_for('dashboard_bp.delete_listing_photo', listing_id=listing.id) }}">
+                <input name="photo_id" value="{{ photo.id }}" />
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            {% endfor %}
+            {% endif %}
+            <hr/>
+            <h3>{{ title }}</h3>
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% include 'dashboard/listing_basic_form.html' %}
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,4 +1,5 @@
 import datetime
+import re
 
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, relationship
@@ -57,3 +58,11 @@ class Photo(db.Model, BasicMixin):
     caption = sa.Column(sa.String)
     listing_id = sa.Column(sa.ForeignKey("listing.id"))
     listing = relationship("Listing", back_populates="photos")
+
+    @property
+    def bucket(self):
+        return re.search(r"s3://([a-zA-Z1-9.-]+)/[a-zA-Z1-9-.]+", self.location).groups()[0]
+
+    @property
+    def object_key(self):
+        return re.search(r"s3://[a-zA-Z1-9.-]+/([a-zA-Z1-9-.]+)", self.location).groups()[0]

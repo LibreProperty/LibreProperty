@@ -1,15 +1,19 @@
+import logging
 from random import choice
 from string import ascii_lowercase
 
 import boto3
+import botocore.exceptions
 from flask import Blueprint, current_app, render_template, url_for, redirect, abort, request, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
 from libreproperty.models import Listing, Photo
+from libreproperty.s3 import get_s3_client
 from libreproperty import db
 
-from .forms import ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotosForm
+from .forms import (
+    ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotoForm, ListingPhotoDeleteForm)
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -42,6 +46,15 @@ def get_secure_listing(listing_id):
     if listing.user_id != current_user.id:
         return abort(403)
     return listing
+
+
+def get_secure_photo(photo_id):
+    p_id = int(photo_id)
+    photo = db.session.execute(db.select(Photo).filter(
+        Photo.id == p_id)).scalar()
+    if photo.listing.user_id != current_user.id:
+        return abort(403)
+    return photo
 
 
 @dashboard_bp.route("/update-listing/<listing_id>", methods=["GET", "POST"])
@@ -93,25 +106,42 @@ def update_listing_property_details(listing_id):
 @login_required
 def update_listing_photos(listing_id):
     listing = get_secure_listing(listing_id)
-    form = ListingPhotosForm()
+    form = ListingPhotoForm()
     if request.method == "GET":
         form.process(obj=listing)
     if form.validate_on_submit():
-        s3 = boto3.client(
-            "s3",
-            endpoint_url=current_app.config.get("S3_ENDPOINT"),
-            config=boto3.session.Config(signature_version='s3v4'),
-            aws_session_token=None,
-            verify=current_app.config.get("S3_VERIFY")
-        )
+        s3 = get_s3_client()
         bucket = current_app.config.get("BUCKET")
         random_str = ''.join(choice(ascii_lowercase) for i in range(4))
         key = f'{str(listing.id)}-{random_str}-{secure_filename(form.photo.data.filename)}'
         s3.upload_fileobj(form.photo.data.stream, bucket, key)
-        location = "s3://{bucket}/{key}"
+        location = f"s3://{bucket}/{key}"
         photo = Photo(location=location, caption=form.caption.data, listing_id=listing.id)
         db.session.add(photo)
         db.session.commit()
         flash(f'Property photo {key} was added successfully', 'success')
         return redirect(url_for('dashboard_bp.update_listing_photos', listing_id=listing_id))
-    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Add a photo")
+    return render_template("dashboard/update_listing_photos.html", form=form, listing=listing, title="Add a photo")
+
+
+@dashboard_bp.route("/update-listing/<listing_id>/delete-photo", methods=["POST"])
+@login_required
+def delete_listing_photo(listing_id):
+    listing = get_secure_listing(listing_id)
+    form = ListingPhotoDeleteForm()
+    photo = get_secure_photo(form.photo_id.data)
+    if form.validate_on_submit():
+        try:
+            s3 = get_s3_client()
+            print(photo.location)
+            s3.delete_object(Bucket=photo.bucket, Key=photo.object_key)
+        except botocore.exceptions.ClientError as err:
+            logging.error("S3 client error while deleting object: %s", err)
+        except Exception as err:
+            logging.error("Unexpected error while deleting object: %s", err)
+
+        db.session.delete(photo)
+        db.session.commit()
+        flash(f'Property photo {photo.location} was deleted successfully', 'success')
+        return redirect(url_for('dashboard_bp.update_listing_photos', listing_id=listing_id))
+    return render_template("dashboard/update_listing_photos.html", form=form, listing=listing, title="Add a photo")

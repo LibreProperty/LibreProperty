@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, flash, redirect, url_for
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 
 from libreproperty.auth import auth_bp, User
 from libreproperty.pages import pages_bp
@@ -38,6 +39,7 @@ def create_app():
     app.config['S3_ENDPOINT'] = os.environ.get("S3_ENDPOINT", "http://localhost:9000")
     app.config['S3_VERIFY'] = environ_get_bool("S3_VERIFY")
     app.config['BUCKET'] = os.environ.get("BUCKET", "libreproperty-images")
+    CSRFProtect(app)
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)
