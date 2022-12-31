@@ -1,6 +1,7 @@
 import datetime
 import re
 
+from flask import current_app
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, relationship
 import sqlalchemy as sa
@@ -69,5 +70,5 @@ class Photo(db.Model, BasicMixin):
 
     @property
     def url(self):
-        base = "http://localhost:9000"
+        base = current_app.config.get("S3_ENDPOINT")
         return f'{base}/{self.bucket}/{self.object_key}'
