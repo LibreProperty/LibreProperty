@@ -18,8 +18,9 @@
             {% if listing.photos %}
             <h1>Currently active photos</h1>
             {% for photo in listing.photos %}
+            <img src="{{ photo.url }}" />
             <form method="POST" action="{{ url_for('dashboard_bp.delete_listing_photo', listing_id=listing.id) }}">
-                <input name="photo_id" value="{{ photo.id }}" />
+                <input type="hidden" name="photo_id" value="{{ photo.id }}" />
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>

@@ -142,6 +142,6 @@ def delete_listing_photo(listing_id):
 
         db.session.delete(photo)
         db.session.commit()
-        flash(f'Property photo {photo.location} was deleted successfully', 'success')
+        flash(f'Property photo {photo.object_key} was deleted successfully', 'success')
         return redirect(url_for('dashboard_bp.update_listing_photos', listing_id=listing_id))
     return render_template("dashboard/update_listing_photos.html", form=form, listing=listing, title="Add a photo")

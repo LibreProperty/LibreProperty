@@ -61,8 +61,13 @@ class Photo(db.Model, BasicMixin):
 
     @property
     def bucket(self):
-        return re.search(r"s3://([a-zA-Z1-9.-]+)/[a-zA-Z1-9-.]+", self.location).groups()[0]
+        return re.search(r"s3://([a-zA-Z1-9.-]+)/*", self.location).groups()[0]
 
     @property
     def object_key(self):
-        return re.search(r"s3://[a-zA-Z1-9.-]+/([a-zA-Z1-9-.]+)", self.location).groups()[0]
+        return re.search(r"s3://[a-zA-Z1-9.-]+/(.*)$", self.location).groups()[0]
+
+    @property
+    def url(self):
+        base = "http://localhost:9000"
+        return f'{base}/{self.bucket}/{self.object_key}'
