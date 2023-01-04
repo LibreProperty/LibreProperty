@@ -90,3 +90,7 @@ class HiddenIntegerField(IntegerField):
 
 class ListingPhotoDeleteForm(FlaskForm):
     photo_id = HiddenIntegerField(validators=[DataRequired()])
+
+
+class ListingDeleteForm(FlaskForm):
+    id = HiddenIntegerField(validators=[DataRequired()])

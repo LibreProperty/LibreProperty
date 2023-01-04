@@ -51,6 +51,7 @@ class Listing(db.Model, BasicMixin):
     cleaning_fee = sa.Column(sa.Integer)
     security_deposit = sa.Column(sa.Integer)
     is_listed = sa.Column(sa.Boolean, default=False)
+    deleted = sa.Column(sa.Boolean, default=False)
 
 
 class Photo(db.Model, BasicMixin):

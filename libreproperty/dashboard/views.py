@@ -2,7 +2,6 @@ import logging
 from random import choice
 from string import ascii_lowercase
 
-import boto3
 import botocore.exceptions
 from flask import Blueprint, current_app, render_template, url_for, redirect, abort, request, flash
 from flask_login import login_required, current_user
@@ -13,7 +12,9 @@ from libreproperty.s3 import get_s3_client
 from libreproperty import db
 
 from .forms import (
-    ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotoForm, ListingPhotoDeleteForm)
+    ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotoForm, ListingPhotoDeleteForm,
+    ListingDeleteForm
+)
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 
@@ -21,7 +22,9 @@ dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
 @dashboard_bp.route("/")
 @login_required
 def index():
-    listings = db.session.execute(db.select(Listing).filter(Listing.user_id == current_user.id)).scalars().all()
+    listings = db.session.execute(
+        db.select(Listing).filter(Listing.user_id == current_user.id).filter(Listing.deleted.isnot(True))
+    ).scalars().all()
     return render_template("dashboard/index.html", listings=listings)
 
 
@@ -133,7 +136,6 @@ def delete_listing_photo(listing_id):
     if form.validate_on_submit():
         try:
             s3 = get_s3_client()
-            print(photo.location)
             s3.delete_object(Bucket=photo.bucket, Key=photo.object_key)
         except botocore.exceptions.ClientError as err:
             logging.error("S3 client error while deleting object: %s", err)
@@ -145,3 +147,18 @@ def delete_listing_photo(listing_id):
         flash(f'Property photo {photo.object_key} was deleted successfully', 'success')
         return redirect(url_for('dashboard_bp.update_listing_photos', listing_id=listing_id))
     return render_template("dashboard/update_listing_photos.html", form=form, listing=listing, title="Add a photo")
+
+
+@dashboard_bp.route("/delete-listing", methods=["POST"])
+@login_required
+def delete_listing():
+    form = ListingDeleteForm()
+    listing = get_secure_listing(form.id.data)
+    if form.validate_on_submit():
+        listing.deleted = True
+        db.session.commit()
+        flash(f'Listing {listing.id}: {listing.title} was deleted successfully', 'success')
+        return redirect(url_for('dashboard_bp.index'))
+    else:
+        flash(f'Listing {listing.id}:{listing.title} was deleted successfully', 'success')
+        return redirect(url_for('dashboard_bp.index'))
