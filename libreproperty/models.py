@@ -70,5 +70,9 @@ class Photo(db.Model, BasicMixin):
 
     @property
     def url(self):
-        base = current_app.config.get("S3_ENDPOINT")
-        return f'{base}/{self.bucket}/{self.object_key}'
+        if current_app.config.get("S3_ENDPOINT").lower() == "aws":
+            # TODO: check if regional buckets are needed/supported
+            return f'https://{self.bucket}.s3.amazonaws.com/{self.object_key}'
+        else:
+            base = current_app.config.get("S3_ENDPOINT")
+            return f'{base}/{self.bucket}/{self.object_key}'

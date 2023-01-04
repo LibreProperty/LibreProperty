@@ -36,6 +36,7 @@ def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
+    # Minio endpoint or `aws`
     app.config['S3_ENDPOINT'] = os.environ.get("S3_ENDPOINT", "http://localhost:9000")
     app.config['S3_VERIFY'] = environ_get_bool("S3_VERIFY")
     app.config['BUCKET'] = os.environ.get("BUCKET", "libreproperty-images")
