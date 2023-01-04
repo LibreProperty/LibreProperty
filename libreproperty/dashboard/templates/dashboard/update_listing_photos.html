@@ -4,7 +4,7 @@
 
 <main>
     <div class="row">
-        <div class="col-4 fs-5">
+        <div class="col-lg-4 col-12-sm fs-5">
             <h2>Updating listing: {{listing.title}}</h2>
             <p>
 
@@ -13,16 +13,16 @@
                 Airbnb, Vrbo and others.
             </p>
         </div>
-        <div class="col-8">
+        <div class="col-lg-8 col-12-sm">
             {% include 'dashboard/update_listing_actions.html' %}
             {% if listing.photos %}
             <h1>Currently active photos</h1>
             <div class="container">
-                <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="row row-cols-lg-2 row-cols-md-2 g-4">
                     {% for photo in listing.photos %}
                     <div class="col">
                         <div class="card">
-                            <img src="{{ photo.url }}" class="card-img-top"/>
+                            <img src="{{ photo.url }}" class="card-img-top img-fluid" />
                             <div class="card-body">
                                 {% if photo.caption %}
                                 <h5 class="card-title">{{photo.caption}}</h5>
