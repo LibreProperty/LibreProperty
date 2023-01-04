@@ -114,7 +114,7 @@ def update_listing_photos(listing_id):
         bucket = current_app.config.get("BUCKET")
         random_str = ''.join(choice(ascii_lowercase) for i in range(4))
         key = f'{str(listing.id)}-{random_str}-{secure_filename(form.photo.data.filename)}'
-        s3.upload_fileobj(form.photo.data.stream, bucket, key)
+        s3.upload_fileobj(form.photo.data, bucket, key)
         location = f"s3://{bucket}/{key}"
         photo = Photo(location=location, caption=form.caption.data, listing_id=listing.id)
         db.session.add(photo)

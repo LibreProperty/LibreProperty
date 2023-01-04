@@ -7,3 +7,4 @@ flask-login
 psycopg2
 pycountry
 wtform_address
+Pillow

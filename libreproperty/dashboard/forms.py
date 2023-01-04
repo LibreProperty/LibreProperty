@@ -1,12 +1,14 @@
 import datetime
+import io
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, MultipleFileField
-from wtforms.validators import DataRequired, Length, Optional
+from wtforms.validators import DataRequired, Length, Optional, ValidationError
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
 from markupsafe import Markup
+from PIL import Image
 
 from .amenities import amenities
 
@@ -72,6 +74,14 @@ class ListingPropertyDetailsForm(FlaskForm):
 class ListingPhotoForm(FlaskForm):
     photo = FileField(validators=[FileRequired()])
     caption = StringField()
+
+    def validate_photo(form, field):
+        try:
+            Image.open(io.BytesIO(field.data.read())).verify()
+            field.data.seek(0)
+        except Exception as e:
+            print(e)
+            raise ValidationError('Photo must be a valid image')
 
 
 class HiddenIntegerField(IntegerField):

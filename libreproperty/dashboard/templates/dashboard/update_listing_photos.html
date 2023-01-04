@@ -17,25 +17,38 @@
             {% include 'dashboard/update_listing_actions.html' %}
             {% if listing.photos %}
             <h1>Currently active photos</h1>
-            {% for photo in listing.photos %}
-            <img src="{{ photo.url }}" />
-            <form method="POST" action="{{ url_for('dashboard_bp.delete_listing_photo', listing_id=listing.id) }}">
-                <input type="hidden" name="photo_id" value="{{ photo.id }}" />
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            {% endfor %}
-            {% endif %}
-            <hr/>
-            <h3>{{ title }}</h3>
-            {% for category, message in get_flashed_messages(with_categories=True) %}
-            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="container">
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    {% for photo in listing.photos %}
+                    <div class="col">
+                        <div class="card">
+                            <img src="{{ photo.url }}" class="card-img-top"/>
+                            <div class="card-body">
+                                {% if photo.caption %}
+                                <h5 class="card-title">{{photo.caption}}</h5>
+                                {% endif %}
+                                <form method="POST"
+                                      action="{{ url_for('dashboard_bp.delete_listing_photo', listing_id=listing.id) }}">
+                                    <input type="hidden" name="photo_id" value="{{ photo.id }}"/>
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <hr/>
+                <h3>{{ title }}</h3>
+                {% for category, message in get_flashed_messages(with_categories=True) %}
+                <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+                {% include 'dashboard/listing_basic_form.html' %}
             </div>
-            {% endfor %}
-            {% include 'dashboard/listing_basic_form.html' %}
         </div>
-    </div>
 </main>
 {% endblock %}
