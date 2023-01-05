@@ -38,7 +38,7 @@ def create_listing():
         form.populate_obj(listing)
         db.session.add(listing)
         db.session.commit()
-        return redirect(url_for('dashboard_bp.index'))
+        return redirect(url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id))
     return render_template("dashboard/create_listing.html", form=form)
 
 
