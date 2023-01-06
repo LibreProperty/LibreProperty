@@ -53,6 +53,8 @@ class Listing(db.Model, BasicMixin):
     is_listed = sa.Column(sa.Boolean, default=False)
     deleted = sa.Column(sa.Boolean, default=False)
 
+    website = relationship("Website", back_populates="listing", uselist=False)
+
 
 class Photo(db.Model, BasicMixin):
     location = sa.Column(sa.String, nullable=False)
@@ -77,3 +79,17 @@ class Photo(db.Model, BasicMixin):
         else:
             base = current_app.config.get("S3_ENDPOINT")
             return f'{base}/{self.bucket}/{self.object_key}'
+
+
+class Website(db.Model, BasicMixin):
+    subdomain = sa.Column(sa.String, unique=True, index=True)
+    address_visible = sa.Column(sa.Boolean, default=False)
+    listing_id = sa.Column(sa.ForeignKey("listing.id"))
+    listing = relationship("Listing", back_populates="website")
+
+    @classmethod
+    def count(cls, subdomain):
+        return cls.query.filter_by(subdomain=subdomain).count()
+#        return db.session.execute(
+#            db.select(Website.id).filter(Website.subdomain == subdomain).count()
+#        )

@@ -3,14 +3,15 @@ import io
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, MultipleFileField
-from wtforms.validators import DataRequired, Length, Optional, ValidationError
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, HiddenField
+from wtforms.validators import DataRequired, Length, Optional, ValidationError, Regexp
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
 from markupsafe import Markup
 from PIL import Image
 
 from .amenities import amenities
+from libreproperty.models import Website
 
 
 def select_multi_checkbox(field, **kwargs):
@@ -94,3 +95,17 @@ class ListingPhotoDeleteForm(FlaskForm):
 
 class ListingDeleteForm(FlaskForm):
     id = HiddenIntegerField(validators=[DataRequired()])
+
+
+def unique_subdomain(form, field):
+    if form.original_subdomain.data != field.data and Website.count(field.data) > 0:
+        raise ValidationError(f"Subdomain {field.data} is already taken. Please choose another subdomain")
+
+
+class WebsiteForm(FlaskForm):
+    subdomain = StringField(validators=[
+        DataRequired(), Length(min=3, max=255), unique_subdomain,
+        Regexp(r"^[a-z\d]+$", message="Only lower case letters and numbers are allowed")
+    ])
+
+    original_subdomain = HiddenField()

@@ -7,13 +7,13 @@ from flask import Blueprint, current_app, render_template, url_for, redirect, ab
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 
-from libreproperty.models import Listing, Photo
+from libreproperty.models import Listing, Photo, Website
 from libreproperty.s3 import get_s3_client
 from libreproperty import db
 
 from .forms import (
     ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotoForm, ListingPhotoDeleteForm,
-    ListingDeleteForm
+    ListingDeleteForm, WebsiteForm
 )
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -58,6 +58,15 @@ def get_secure_photo(photo_id):
     if photo.listing.user_id != current_user.id:
         return abort(403)
     return photo
+
+
+def get_secure_website(website_id):
+    w_id = int(website_id)
+    website = db.session.execute(db.select(Website).filter(
+        Website.id == w_id)).scalar()
+    if website.listing.user_id != current_user.id:
+        return abort(403)
+    return website
 
 
 @dashboard_bp.route("/update-listing/<listing_id>", methods=["GET", "POST"])
@@ -162,3 +171,39 @@ def delete_listing():
     else:
         flash(f'Listing {listing.id}:{listing.title} was deleted successfully', 'success')
         return redirect(url_for('dashboard_bp.index'))
+
+
+@dashboard_bp.route("/update-listing/<listing_id>/create-website", methods=["GET", "POST"])
+@login_required
+def create_website(listing_id):
+    listing = get_secure_listing(listing_id)
+    if listing.website:
+        flash('You already had an existing website created. So redirected you to that one instead.', 'warning')
+        return redirect(url_for('dashboard_bp.update_website', listing_id=listing_id, website_id=listing.website.id))
+    form = WebsiteForm()
+    if form.validate_on_submit():
+        website = Website()
+        website.listing_id = listing.id
+        form.populate_obj(website)
+        db.session.add(website)
+        db.session.commit()
+        flash('Website was created successfully', 'success')
+        return redirect(url_for('dashboard_bp.update_website', listing_id=listing_id, website_id=website.id))
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Create Website")
+
+
+@dashboard_bp.route("/update-listing/<listing_id>/update-website/<website_id>", methods=["GET", "POST"])
+@login_required
+def update_website(listing_id, website_id):
+    listing = get_secure_listing(listing_id)
+    website = get_secure_website(website_id)
+    form = WebsiteForm()
+    if request.method == "GET":
+        form.process(obj=website)
+        form.original_subdomain.data = website.subdomain
+    if form.validate_on_submit():
+        form.populate_obj(website)
+        db.session.commit()
+        flash('Website was updated successfully', 'success')
+        return redirect(url_for('dashboard_bp.update_website', listing_id=listing_id, website_id=website.id))
+    return render_template("dashboard/update_listing.html", form=form, listing=listing, title="Update Website")

@@ -16,7 +16,11 @@
             <a class="btn btn-primary" href="{{ url_for('dashboard_bp.create_listing') }}">Create your first listing</a>
             {% else %}
             <div class="listings">
-                <h2>Your listings</h2>
+                <div class="title">
+                    <h2 class="float-start">Your listings</h2>
+                    <a class="btn btn-success float-end me-4" href="{{ url_for('dashboard_bp.create_listing') }}">
+                        Create a listing</a>
+                </div>
                 <table class="table table-hover">
                     <thead>
                     <tr>
@@ -30,7 +34,8 @@
                         <td>{{ listing.title }}</td>
                         <td>{{ listing.city }}</td>
                         <td>
-                            <a class="ms-1 btn btn-primary btn-sm" href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}">Modify</a>
+                            <a class="ms-1 btn btn-primary btn-sm"
+                               href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}">Modify</a>
                             <form method="POST"
                                   action="{{ url_for('dashboard_bp.delete_listing') }}"
                                   style="display: inline;">

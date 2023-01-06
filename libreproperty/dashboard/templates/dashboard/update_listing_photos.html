@@ -8,7 +8,8 @@
         <div class="col-lg-8 col-12-sm">
             {% include 'dashboard/update_listing_actions.html' %}
             {% if listing.photos %}
-            <h1>Currently active photos</h1>
+            <hr/>
+            <h2>Currently active photos</h2>
             <div class="container">
                 <div class="row row-cols-lg-2 row-cols-md-2 g-4">
                     {% for photo in listing.photos %}
