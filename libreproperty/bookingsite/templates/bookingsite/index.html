@@ -1,0 +1,21 @@
+{% extends 'bookingsite/base.html' %}
+
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-lg-8 col-12-sm">
+            {% for category, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            <h1>{{ site.listing.title }}</h1>
+
+        </div>
+        <div class="col-4 d-none d-sm-block">
+            <img height="200" src="{{ url_for('static', filename='vacation-beach-house.jpeg') }}"/>
+        </div>
+    </div>
+</main>
+{% endblock %}

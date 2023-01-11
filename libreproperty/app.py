@@ -7,6 +7,7 @@ from flask_wtf.csrf import CSRFProtect
 from libreproperty.auth import auth_bp, User
 from libreproperty.pages import pages_bp
 from libreproperty.dashboard import dashboard_bp
+from libreproperty.bookingsite import bookingsite_bp
 from libreproperty import models
 
 login_manager = LoginManager()
@@ -45,6 +46,7 @@ def create_app():
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)
     app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
+    app.register_blueprint(bookingsite_bp, url_prefix="/sites")
     from libreproperty import db
     db.init_app(app)
     with app.app_context():

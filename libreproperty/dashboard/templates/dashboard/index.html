@@ -35,7 +35,7 @@
                         <td>{{ listing.city }}</td>
                         <td>
                             <a class="ms-1 btn btn-primary btn-sm"
-                               href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}">Modify</a>
+                               href="{{ url_for('dashboard_bp.update_listing', listing_id=listing.id) }}">Manage</a>
                             <form method="POST"
                                   action="{{ url_for('dashboard_bp.delete_listing') }}"
                                   style="display: inline;">
