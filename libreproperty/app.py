@@ -34,19 +34,20 @@ def environ_get_bool(name: str) -> bool:
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, subdomain_matching=True)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
     # Minio endpoint or `aws`
     app.config['S3_ENDPOINT'] = os.environ.get("S3_ENDPOINT", "http://localhost:9000")
     app.config['S3_VERIFY'] = environ_get_bool("S3_VERIFY")
     app.config['BUCKET'] = os.environ.get("BUCKET", "libreproperty-images")
+    app.config['SERVER_NAME'] = os.environ.get("SERVER_NAME", "localhost:8888")
     CSRFProtect(app)
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
     app.register_blueprint(pages_bp)
     app.register_blueprint(dashboard_bp, url_prefix="/dashboard")
-    app.register_blueprint(bookingsite_bp, url_prefix="/sites")
+    app.register_blueprint(bookingsite_bp)
     from libreproperty import db
     db.init_app(app)
     with app.app_context():
