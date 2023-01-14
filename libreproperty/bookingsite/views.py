@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, abort
 
 from libreproperty.models import Website, db
 
@@ -19,4 +19,6 @@ def subdomain_index(subdomain):
     site = db.session.execute(
         db.select(Website).filter(Website.subdomain == subdomain)
     ).scalar()
+    if not site:
+        return abort(404)
     return render_template("bookingsite/index.html", site=site, title="Book today!")
