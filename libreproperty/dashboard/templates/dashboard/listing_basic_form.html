@@ -12,7 +12,11 @@
         {% endif %}
     </div>
     <div class="col-sm-9">
-        {{ field(class='form-control') }}
+        {% if field.render_kw and "class" in field.render_kw %}
+        {{ field(class=" ".join(["form-control", field.render_kw.get("class")]))  }}
+        {% else %}
+        {{ field(class="form-control")  }}
+        {% endif %}
         {% if field.errors %}
         <ul class="errors">
             {% for error in field.errors %}
@@ -23,5 +27,5 @@
     </div>
 </div>
 {% endfor %}
-<button type="submit" class="btn btn-primary">Submit</button>
+<button type="submit" class="btn btn-primary">Save</button>
 </form>

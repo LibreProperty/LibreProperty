@@ -3,7 +3,7 @@ import io
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, HiddenField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, HiddenField, BooleanField
 from wtforms.validators import DataRequired, Length, Optional, ValidationError, Regexp
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
@@ -107,5 +107,6 @@ class WebsiteForm(FlaskForm):
         DataRequired(), Length(min=3, max=255), unique_subdomain,
         Regexp(r"^[a-z\d]+$", message="Only lower case letters and numbers are allowed")
     ])
+    address_visible = BooleanField("Show exact address", render_kw={"class": "form-check-input mt-2"})
 
     original_subdomain = HiddenField()

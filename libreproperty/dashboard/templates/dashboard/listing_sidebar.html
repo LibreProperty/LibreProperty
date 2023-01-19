@@ -11,13 +11,17 @@
        class="btn btn-success">Create Website</a>
     {% else %}
     <a href="{{ url_for('dashboard_bp.update_website', listing_id=listing.id, website_id=listing.website.id) }}"
-       class="btn btn-success">Manage Website</a>
+       class="btn btn-success">Manage Website</a><br/>
+   {% if listing.website.subdomain %}
+    <a href="{{ url_for('bookingsite_bp.subdomain_index', subdomain=listing.website.subdomain) }}"
+       class="mt-1 btn btn-primary">Preview Website</a></br>
+    {% endif %}
     {% endif %}
     <form method="POST"
           action="{{ url_for('dashboard_bp.delete_listing') }}"
           style="display: inline;">
         <input type="hidden" name="id" value="{{ listing.id }}"/>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="submit" class="btn btn-danger">Delete this listing</button>
+        <button type="submit" class="mt-1 btn btn-danger">Delete this listing</button>
     </form>
 </div>

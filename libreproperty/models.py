@@ -1,4 +1,5 @@
 import datetime
+import urllib.parse
 import re
 
 from flask import current_app
@@ -54,6 +55,14 @@ class Listing(db.Model, BasicMixin):
     deleted = sa.Column(sa.Boolean, default=False)
 
     website = relationship("Website", back_populates="listing", uselist=False)
+
+    @property
+    def address(self):
+        return f"{self.street}, {self.city}, {self.state} {self.postal_code}"
+
+    @property
+    def address_urlencoded(self):
+        return urllib.parse.quote(self.address)
 
 
 class Photo(db.Model, BasicMixin):
