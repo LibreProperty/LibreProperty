@@ -1,4 +1,5 @@
 import os
+import urllib.parse
 
 from flask import Flask, flash, redirect, url_for
 from flask_login import LoginManager
@@ -35,6 +36,7 @@ def environ_get_bool(name: str) -> bool:
 
 def create_app():
     app = Flask(__name__, subdomain_matching=True)
+    app.jinja_env.filters["quote_plus"] = urllib.parse.quote_plus
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
     # Minio endpoint or `aws`

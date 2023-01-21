@@ -10,12 +10,12 @@
                     {% if loop.first -%}class="active" aria-current="true"{%- endif %} aria-label="{{ photo.caption }}"></button>
             {% endfor %}
         </div>
-        <div class="carousel-inner rounded-5 shadow-4">
+        <div class="carousel-inner rounded-4 shadow-4 ratio ratio-21x9">
             {% for photo in site.listing.photos %}
             <div class="carousel-item {% if loop.first -%}active{%- endif %}">
-                <img src="{{ photo.url }}" class="d-block w-100 rounded" alt="...">
+                <img src="{{ photo.url }}" class="d-block w-100 rounded" alt="{{ photo.caption }}">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5>{{ photo.caption }}</h5>
+                    <h2>{{ photo.caption }}</h2>
                 </div>
             </div>
             {% endfor %}
@@ -29,7 +29,7 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <div class="row mt-2">
+    <div class="row mt-3">
         <div class="col-lg-6 col-12-sm">
             <h1>{{ site.listing.title }}</h1>
             {% for description in site.listing.description.split("\n") %}
@@ -39,6 +39,7 @@
         </div>
         <div class="col-lg-6 col-12-sm">
             {% if site.address_visible %}
+            <h3>Location</h3>
             <iframe
                     width="600"
                     height="450"
@@ -47,7 +48,7 @@
                     allowfullscreen
                     referrerpolicy="no-referrer-when-downgrade"
                     src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAuq6j93nrFE8dzsCkaJ8hx6opFgdGDrvc
-    &q={{ site.listing.address_urlencoded }}">
+    &q={{ site.listing.address|quote_plus }}">
             </iframe>
             {% endif %}
             <h3>Amenities</h3>
@@ -55,7 +56,6 @@
             {% for amenity in site.listing.amenities %}
             {{ amenity }}
             {% endfor %}
-            <img class="img-fluid" src="{{ url_for('static', filename='vacation-beach-house.jpeg') }}"/>
         </div>
     </div>
 </main>

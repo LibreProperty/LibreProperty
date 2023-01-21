@@ -3,6 +3,7 @@ import urllib.parse
 import re
 
 from flask import current_app
+import pycountry
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, relationship
 import sqlalchemy as sa
@@ -58,11 +59,15 @@ class Listing(db.Model, BasicMixin):
 
     @property
     def address(self):
-        return f"{self.street}, {self.city}, {self.state} {self.postal_code}"
+        return f"{self.street}, {self.city}, {self.state[-2:]} {self.postal_code}"
 
     @property
-    def address_urlencoded(self):
-        return urllib.parse.quote(self.address)
+    def city_state(self):
+        return f"{self.city}, {self.state[-2:]}"
+
+    @property
+    def state_verbose(self):
+        return pycountry.subdivisions.get(code=self.state).name
 
 
 class Photo(db.Model, BasicMixin):
@@ -93,6 +98,7 @@ class Photo(db.Model, BasicMixin):
 class Website(db.Model, BasicMixin):
     subdomain = sa.Column(sa.String, unique=True, index=True)
     address_visible = sa.Column(sa.Boolean, default=False)
+    location_description = sa.Column(sa.Text)
     listing_id = sa.Column(sa.ForeignKey("listing.id"))
     listing = relationship("Listing", back_populates="website")
 

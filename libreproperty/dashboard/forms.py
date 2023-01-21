@@ -108,5 +108,6 @@ class WebsiteForm(FlaskForm):
         Regexp(r"^[a-z\d]+$", message="Only lower case letters and numbers are allowed")
     ])
     address_visible = BooleanField("Show exact address", render_kw={"class": "form-check-input mt-2"})
+    location_description = TextAreaField("Location page: Description")
 
     original_subdomain = HiddenField()

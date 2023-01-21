@@ -1,0 +1,57 @@
+{% extends 'bookingsite/base.html' %}
+
+{% block content %}
+<main>
+
+    <div class="row mt-2">
+        <div class="col-lg-5 col-12-sm">
+            <h1>Location</h1>
+
+            {% if site.address_visible %}
+            <p>Address: {{ site.listing.address }}</p>
+            {% else %}
+            <p>
+                The property is located in the city of {{site.listing.city}} in {{ site.listing.state_verbose }}.
+                You will be able to get the full address after booking the property.
+            </p>
+            {% endif %}
+            {% if site.location_description %}
+            {% for description in site.location_description.split("\n") %}
+            <p>{{ description }}</p>
+            {% endfor %}
+            {% endif %}
+
+        </div>
+        <div class="col-lg-7 col-12-sm">
+            <div class="justify-content-center align-items-center mx-auto"
+                 style="display: flex; justify-content: center;">
+                {% if site.address_visible %}
+                <iframe
+                        width="700"
+                        height="500"
+                        style="border:0"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAuq6j93nrFE8dzsCkaJ8hx6opFgdGDrvc
+    &q={{ site.listing.address|quote_plus }}&zoom=14">
+                </iframe>
+                {% else %}
+                <iframe
+                        width="700"
+                        height="500"
+                        style="border:0"
+                        loading="lazy"
+                        allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAuq6j93nrFE8dzsCkaJ8hx6opFgdGDrvc
+    &q={{ site.listing.city_state|quote_plus }}&zoom=14">
+
+
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</main>
+{% endblock %}
