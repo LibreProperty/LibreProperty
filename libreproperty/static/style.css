@@ -1,0 +1,8 @@
+.datepicker-dropdown {
+  z-index: 1;
+}
+
+.datepicker-cell {
+    color: #212529;
+    z-index: 1;
+}

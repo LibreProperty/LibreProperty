@@ -1,5 +1,10 @@
 {% extends 'bookingsite/base.html' %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <main>
     <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
@@ -7,28 +12,55 @@
 
             {% for photo in site.listing.photos %}
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ loop.index - 1 }}"
-                    {% if loop.first -%}class="active" aria-current="true"{%- endif %} aria-label="{{ photo.caption }}"></button>
+                    {% if loop.first -%}class="active" aria-current="true" {%- endif %}
+                    aria-label="{{ photo.caption }}"></button>
             {% endfor %}
         </div>
+
         <div class="carousel-inner rounded-4 shadow-4 ratio ratio-21x9">
-            {% for photo in site.listing.photos %}
+            <div class="carousel-caption d-none d-md-block" style="z-index: 1; top: 34%;">
+                <div id="booking-form" class="col-md-8 offset-md-2">
+                    <div id="datepicker" class="input-group input-group-lg">
+                        <input type="text" name="start" class="form-control datepicker-input" autocomplete="off">
+                        <span class="input-group-text">to</span>
+                        <input type="text" name="end" class="form-control datepicker-input" autocomplete="off">
+                        <select class="form-select" aria-label="Number of guests">
+                            {% for i in range(1, site.listing.accommodates + 1) %}
+                            {% if loop.first %}
+                            <option selected value="1">1 guest</option>
+                            {% else %}
+                            <option value="2">{{ i }} guests</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-primary" type="button">Book today!</button>
+                    </div>
+                </div>
+            </div>
+                {% for photo in site.listing.photos %}
             <div class="carousel-item {% if loop.first -%}active{%- endif %}">
                 <img src="{{ photo.url }}" class="d-block w-100 rounded" alt="{{ photo.caption }}">
                 <div class="carousel-caption d-none d-md-block">
+
                     <h2>{{ photo.caption }}</h2>
                 </div>
             </div>
             {% endfor %}
+
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
         </button>
+
     </div>
+
     <div class="row mt-3">
         <div class="col-lg-6 col-12-sm">
             <h1>{{ site.listing.title }}</h1>
@@ -59,4 +91,11 @@
         </div>
     </div>
 </main>
+<script>
+const elem = document.getElementById('datepicker');
+const rangepicker = new DateRangePicker(elem, {
+  // ...options
+});
+
+</script>
 {% endblock %}
