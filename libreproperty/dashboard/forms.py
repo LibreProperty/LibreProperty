@@ -3,7 +3,7 @@ import io
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalRangeField, HiddenField, BooleanField
+from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalField, HiddenField, BooleanField
 from wtforms.validators import DataRequired, Length, Optional, ValidationError, Regexp
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
@@ -46,8 +46,8 @@ class ListingPricingForm(FlaskForm):
     weekend_price = IntegerField(validators=[Optional()])
     currency = SelectField(default="USD", choices=(('USD', 'USD'), ('EUR', 'EUR')),
                            validators=[Optional()])
-    monthly_price_factor = DecimalRangeField(default=1, places=2, validators=[Optional()])
-    weekly_price_factor = DecimalRangeField(default=1, places=2, validators=[Optional()])
+    monthly_price_factor = DecimalField(default=1, places=2, validators=[Optional()])
+    weekly_price_factor = DecimalField(default=1, places=2, validators=[Optional()])
     guests_included_in_regular_fee = IntegerField(validators=[Optional()])
     extra_person_fee = IntegerField(validators=[Optional()])
     cleaning_fee = IntegerField(validators=[Optional()])
@@ -65,8 +65,7 @@ class ListingPropertyDetailsForm(FlaskForm):
     max_nights = IntegerField(validators=[Optional()])
     cancellation_policy = SelectField(
         choices=[('flexible', 'Flexible'), ('moderate', 'Moderate'), ('firm', 'Firm'),
-                 ('strict', 'Strict'), ('strict-long-term', 'Strict Long Term'),
-                 ('flexible-long-term', 'Flexible Long Term'), ('non-refundable', 'Non-refundable')])
+                 ('strict', 'Strict')])
     check_in_time = TimeField('Check-in Time', default=datetime.time(hour=13))
     check_out_time = TimeField('Check-out Time', default=datetime.time(hour=10))
     amenities = SelectMultipleField(choices=amenities, widget=select_multi_checkbox)

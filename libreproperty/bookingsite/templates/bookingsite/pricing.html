@@ -1,0 +1,136 @@
+{% extends 'bookingsite/base.html' %}
+
+{% block content %}
+<main>
+    <div class="row mt-4">
+        <div class="col-lg-7 col-12-sm">
+            <h2>Rates</h2>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Duration</th>
+                    <th scope="col">Nightly rate</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Base rate</td>
+                    {% if site.listing.base_price %}
+                    <td>{{ "${:,.2f}".format(site.listing.base_price) }}</td>
+                    {% else %}
+                    <td>Base price hasn't been set. Please set the base price in the admin dashboard.</td>
+                    {% endif %}
+                </tr>
+                {% if site.listing.weekend_price %}
+                <tr>
+                    <td>Weekend pricing (Friday and Saturday Night)</td>
+                    <td>{{ "${:,.2f}".format(site.listing.weekend_price) }}</td>
+                </tr>
+                {% endif %}
+                {% if site.listing.weekly_price_factor < 1 %}
+                <tr>
+                    <td>Weekly (Staying for more than 7 days)</td>
+                    <td>{{ "${:,.2f}".format(site.listing.base_price * site.listing.weekly_price_factor) }}
+                    {{ "({:,.0f}% discount)".format((1 - site.listing.weekly_price_factor) * 100) }}</td>
+                </tr>
+                {% endif %}
+                {% if site.listing.monthly_price_factor < 1 %}
+                <tr>
+                    <td>Monthly (Staying for more than 30 days)</td>
+                    <td>{{ "${:,.2f}".format(site.listing.base_price * site.listing.monthly_price_factor) }}
+                        {{ "({:,.0f}% discount)".format((1 - site.listing.monthly_price_factor) * 100) }}</td>
+                </tr>
+                {% endif %}
+                {% if site.listing.extra_person_fee and site.listing.guests_included_in_regular_fee %}
+                <tr>
+                    <td>Extra person fee ({{ site.listing.guests_included_in_regular_fee }} guests are included)</td>
+                    <td>{{ "${:,.2f}".format(site.listing.extra_person_fee) }}</td>
+                </tr>
+                {% endif %}
+            </table>
+
+            <h2>Additional fees</h2>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Amount</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td>Cleaning Fee (per booking)</td>
+                    {% if site.listing.cleaning_fee %}
+                    <td>{{ "${:,.2f}".format(site.listing.cleaning_fee) }}</td>
+                    {% else %}
+                    <td>$0</td>
+                    {% endif %}
+                </tr>
+                {% if site.listing.security_deposit %}
+                <tr>
+                    <td>Security Deposit (per booking and will be returned in full if no damage found)</td>
+                    <td>{{ "${:,.2f}".format(site.listing.security_deposit) }}</td>
+                    <td>$0</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="col-lg-5 col-12-sm">
+            <h2>Property Policy</h2>
+            <ul>
+                <li>Check-in after {{ site.listing.check_in_time.strftime("%I:%M %p") }}</li>
+                <li>Check-out before {{ site.listing.checkout_time.strftime("%I:%M %p") }}</li>
+                {% if site.listing.accommodates %}
+                <li>Accommodates a maximum of {{ site.listing.accommodates }} guests</li>
+                {% endif %}
+                {% if site.listing.min_nights %}
+                <li>Minimum stay of {{ site.listing.min_nights }} nights</li>
+                {% endif %}
+                {% if site.listing.max_nights %}
+                <li>Maximum stay of {{ site.listing.max_nights }} nights</li>
+                {% endif %}
+                {% if site.listing.minimum_age %}
+                <li>Minimum age of adult responsible {{ site.listing.minimum_age }}</li>
+                {% endif %}
+                {% if site.listing.bedrooms %}
+                <li>Amount of bedrooms {{ site.listing.bedrooms }}</li>
+                {% endif %}
+                {% if site.listing.bedrooms %}
+                <li>Amount of beds {{ site.listing.beds }}</li>
+                {% endif %}
+                {% if site.listing.bathrooms %}
+                <li>Amount of bathrooms {{ site.listing.bathrooms }}</li>
+                {% endif %}
+            </ul>
+            <h2>Refund Policy</h2>
+            {% if site.listing.cancellation_policy == "flexible" %}
+            <ul>
+                <li>Cancel 24 hours before check-in for a full refund</li>
+                <li>If cancelled after check-in, pay for each night you stayed, plus 1 additional night</li>
+            </ul>
+            {% elif site.listing.cancellation_policy == "moderate" %}
+            <ul>
+                <li>Cancel 5 days before check-in for a full refund</li>
+                <li>If cancelled after check-in, pay for each night you stayed, plus 1 additional night,
+                    and get a 50% refund for all unspent nights
+                </li>
+            </ul>
+            {% elif site.listing.cancellation_policy == "firm" %}
+            <ul>
+                <li>Cancel at least 30 days before check-in for a full refund</li>
+                <li>If you cancel between 7 and 30 days before check-in, you’ll get a 50% refund</li>
+                <li>If you cancel less than 7 days before check-in, you won't be able to get any refund</li>
+                <li>You can also receive a full refund if you cancel within 48 hours of booking,
+                    if the cancellation occurs at least 14 days before check-in</li>
+            </ul>
+            {% elif site.listing.cancellation_policy == "strict" %}
+            <ul>
+                <li>To receive a full refund, you must cancel within 48 hours of booking,
+                    and the cancellation must occur at least 14 days before check-in</li>
+                <li>If you cancel between 7 and 14 days before check-in, you’ll get a 50% refund</li>
+                <li>If cancelled after 14 days, you won't be able to get any refund</li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -39,7 +39,7 @@ class Listing(db.Model, BasicMixin):
     max_nights = sa.Column(sa.Integer)
     cancellation_policy = sa.Column(sa.String)
     check_in_time = sa.Column(sa.Time, nullable=False, default=datetime.time(hour=15))
-    checkout_in_time = sa.Column(sa.Time, nullable=False, default=datetime.time(hour=10))
+    checkout_time = sa.Column(sa.Time, nullable=False, default=datetime.time(hour=10))
     amenities = sa.Column(sa.JSON)
     user_id = sa.Column(sa.ForeignKey("user.id"))
     user = relationship("User", back_populates="listings")

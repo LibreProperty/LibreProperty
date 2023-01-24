@@ -22,3 +22,9 @@ def subdomain_index(subdomain):
 def location(subdomain):
     site = get_site_or_404(subdomain)
     return render_template("bookingsite/location.html", site=site, title="")
+
+
+@bookingsite_bp.route("/pricing", subdomain="<subdomain>")
+def pricing(subdomain):
+    site = get_site_or_404(subdomain)
+    return render_template("bookingsite/pricing.html", site=site, title="")
