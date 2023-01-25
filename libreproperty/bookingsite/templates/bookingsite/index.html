@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-                {% for photo in site.listing.photos %}
+            {% for photo in site.listing.photos %}
             <div class="carousel-item {% if loop.first -%}active{%- endif %}">
                 <img src="{{ photo.url }}" class="d-block w-100 rounded" alt="{{ photo.caption }}">
                 <div class="carousel-caption d-none d-md-block">
@@ -96,6 +96,7 @@ const elem = document.getElementById('datepicker');
 const rangepicker = new DateRangePicker(elem, {
   // ...options
 });
+
 
 </script>
 {% endblock %}

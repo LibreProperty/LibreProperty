@@ -18,7 +18,7 @@
         <a class="col-2 navbar-brand pt-0 ms-4" href="/">
             <img src="{{ url_for('static', filename='logo-w45.png') }}" height="35"
                  class="align-top"/>
-            <span class="align-bottom">{{site.listing.title}}</span>
+            <span class="align-bottom">{{ site.logo_text or site.listing.title }}</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">

@@ -97,6 +97,7 @@ class Photo(db.Model, BasicMixin):
 
 class Website(db.Model, BasicMixin):
     subdomain = sa.Column(sa.String, unique=True, index=True)
+    logo_text = sa.Column(sa.String)
     address_visible = sa.Column(sa.Boolean, default=False)
     location_description = sa.Column(sa.Text)
     listing_id = sa.Column(sa.ForeignKey("listing.id"))

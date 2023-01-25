@@ -106,6 +106,7 @@ class WebsiteForm(FlaskForm):
         DataRequired(), Length(min=3, max=255), unique_subdomain,
         Regexp(r"^[a-z\d]+$", message="Only lower case letters and numbers are allowed")
     ])
+    logo_text = StringField(validators=[Length(max=15)])
     address_visible = BooleanField("Show exact address", render_kw={"class": "form-check-input mt-2"})
     location_description = TextAreaField("Location page: Description")
 
