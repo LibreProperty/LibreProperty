@@ -6,3 +6,18 @@
     color: #212529;
     z-index: 1;
 }
+
+.input-group .form-control, .intl-tel-input { width: 100%; }
+
+.iti {
+  width: 100%;
+  display: block;
+}
+
+.iti__arrow { border: none; }
+
+.iti > .form-control {
+        height: calc(3.5rem + 2px);
+        line-height: 1.25;
+        padding: 1rem 0.75rem;
+}
