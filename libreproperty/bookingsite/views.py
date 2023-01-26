@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, request
 
 from libreproperty.models import Website, db
 
@@ -28,3 +28,12 @@ def location(subdomain):
 def pricing(subdomain):
     site = get_site_or_404(subdomain)
     return render_template("bookingsite/pricing.html", site=site, title="")
+
+
+@bookingsite_bp.route("/booking", subdomain="<subdomain>")
+def booking(subdomain):
+    site = get_site_or_404(subdomain)
+    checkin = request.args.get("checkin")
+    checkout = request.args.get("checkout")
+    guests = int(request.args.get("guests", 1))
+    return render_template("bookingsite/booking.html", site=site, checkin=checkin, checkout=checkout, guests=guests)

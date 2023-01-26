@@ -1,0 +1,94 @@
+{% extends 'bookingsite/base.html' %}
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
+{% endblock %}
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h5 class="mb-0">Booking details</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/booking" method="post">
+                        <div id="datepicker" class="input-group">
+                            <div class="form-floating">
+                                <input id="checkin" type="text" name="checkin" class="form-control datepicker-input"
+                                       autocomplete="off" {% if
+                                       checkin -%} value="{{checkin}}" {%- endif %}>
+
+                                <label for="checkin">Check-in</label>
+                            </div>
+                            <span class="input-group-text">to</span>
+                            <div class="form-floating">
+                                <input id="checkout" type="text" name="checkout" class="form-control datepicker-input"
+                                       autocomplete="off" {% if
+                                       checkout -%} value="{{ checkout }}" {%- endif %}>
+                                <label for="checkout">Check-out</label>
+                            </div>
+                            <div class="form-floating">
+                                <select id="guests" name="guests" class="form-select" aria-label="Number of guests">
+                                    {% for i in range(1, site.listing.accommodates + 1) %}
+                                    <option {% if guests== i %}selected{% endif %} value="{{ i }}">{{ i }} {% if
+                                        loop.first
+                                        %}guest{% else %}guests{% endif %}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <label for="guests">Number of guests</label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">Request to book</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h5 class="mb-0">Summary</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Number of nights
+                            <span>6</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Nightly rate
+                            <span>$55</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                            Cleaning fee
+                            <span>$0</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                            <div>
+                                <strong>Total amount</strong>
+
+                            </div>
+                            <span><strong>$530.94</strong></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+const elem = document.getElementById('datepicker');
+const rangepicker = new DateRangePicker(elem, {
+    minDate: new Date(),
+    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+});
+{% if checkin and checkout %}
+rangepicker.setDate("{{ checkin }}", "{{ checkout }}");
+{% endif %}
+
+
+</script>
+{% endblock %}

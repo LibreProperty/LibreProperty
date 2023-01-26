@@ -19,23 +19,21 @@
 
         <div class="carousel-inner rounded-4 shadow-4 ratio ratio-21x9">
             <div class="carousel-caption d-none d-md-block" style="z-index: 1; top: 34%;">
-                <div id="booking-form" class="col-md-8 offset-md-2">
-                    <div id="datepicker" class="input-group input-group-lg">
-                        <input type="text" name="start" class="form-control datepicker-input" autocomplete="off">
-                        <span class="input-group-text">to</span>
-                        <input type="text" name="end" class="form-control datepicker-input" autocomplete="off">
-                        <select class="form-select" aria-label="Number of guests">
-                            {% for i in range(1, site.listing.accommodates + 1) %}
-                            {% if loop.first %}
-                            <option selected value="1">1 guest</option>
-                            {% else %}
-                            <option value="2">{{ i }} guests</option>
-                            {% endif %}
-                            {% endfor %}
-                        </select>
-                        <button class="btn btn-primary" type="button">Book today!</button>
+                <form action="/booking" method="get">
+                    <div id="booking-form" class="col-md-8 offset-md-2">
+                        <div id="datepicker" class="input-group input-group-lg">
+                            <input type="text" name="checkin" class="form-control datepicker-input" autocomplete="off">
+                            <span class="input-group-text">to</span>
+                            <input type="text" name="checkout" class="form-control datepicker-input" autocomplete="off">
+                            <select name="guests" class="form-select" aria-label="Number of guests">
+                                {% for i in range(1, site.listing.accommodates + 1) %}
+                                <option value="{{ i }}">{{ i }} {% if loop.first %}guest{% else %}guests{% endif %}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-primary" type="submit">Book today!</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
             {% for photo in site.listing.photos %}
             <div class="carousel-item {% if loop.first -%}active{%- endif %}">
@@ -94,9 +92,8 @@
 <script>
 const elem = document.getElementById('datepicker');
 const rangepicker = new DateRangePicker(elem, {
-  // ...options
+    minDate: new Date(),
+    maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
 });
-
-
 </script>
 {% endblock %}
