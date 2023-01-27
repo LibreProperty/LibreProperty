@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, abort, request
 
 from libreproperty.models import Website, db
+from .forms import BookingForm
 
 bookingsite_bp = Blueprint('bookingsite_bp', __name__, template_folder='templates')
 
@@ -30,10 +31,14 @@ def pricing(subdomain):
     return render_template("bookingsite/pricing.html", site=site, title="")
 
 
-@bookingsite_bp.route("/booking", subdomain="<subdomain>")
+@bookingsite_bp.route("/booking", subdomain="<subdomain>", methods=["GET", "POST"])
 def booking(subdomain):
+    form = BookingForm()
+    if form.validate_on_submit():
+        print("Create a booking")
     site = get_site_or_404(subdomain)
     checkin = request.args.get("checkin")
     checkout = request.args.get("checkout")
     guests = int(request.args.get("guests", 1))
-    return render_template("bookingsite/booking.html", site=site, checkin=checkin, checkout=checkout, guests=guests)
+    return render_template("bookingsite/booking.html", site=site, checkin=checkin, checkout=checkout, guests=guests,
+                           form=form)
