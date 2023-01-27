@@ -48,8 +48,8 @@ class ListingPricingForm(FlaskForm):
                            validators=[Optional()])
     monthly_price_factor = DecimalField(default=1, places=2, validators=[Optional()])
     weekly_price_factor = DecimalField(default=1, places=2, validators=[Optional()])
-    guests_included_in_regular_fee = IntegerField(validators=[Optional()])
-    extra_person_fee = IntegerField(validators=[Optional()])
+    # guests_included_in_regular_fee = IntegerField(validators=[Optional()])
+    # extra_person_fee = IntegerField(validators=[Optional()])
     cleaning_fee = IntegerField(validators=[Optional()])
     security_deposit = IntegerField(validators=[Optional()])
 

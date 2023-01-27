@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary float-end mt-3" type="submit">Request to book</button>
+                        <button class="btn btn-primary float-end mt-2" type="submit">Request to book</button>
                         </form>
                     </div>
                 </div>
@@ -109,22 +109,32 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                             Number of nights
-                            <span>6</span>
+                            <span id="nights">0</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                            Nightly rate
-                            <span>$55</span>
+                            {% if site.listing.weekend_price %}Weekdays{% else %}Nightly{% endif %}
+                            <span id="nightly_cost">0 x ${{ site.listing.base_price }} = $0</span>
                         </li>
+                        {% if site.listing.weekend_price %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Weekends
+                            <span id="weekend_cost">0 x ${{ site.listing.weekend_price }} = $0</span>
+                        </li>
+                        {% endif %}
+                        {% if site.listing.cleaning_fee %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Cleaning Fee
+                            <span id="cleaning_fee">${{ site.listing.cleaning_fee }}</span>
+                        </li>
+                        {% endif %}
                         <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            Cleaning fee
-                            <span>$0</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                             <div>
                                 <strong>Total amount</strong>
 
                             </div>
-                            <span><strong>$530.94</strong></span>
+                            <span class="fw-bold" id="total_cost">$0</span>
                         </li>
                     </ul>
                 </div>
@@ -139,12 +149,78 @@ const rangepicker = new DateRangePicker(elem, {
     maxDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
 });
 
+let state = {
+    checkin: new Date(),
+    checkout: new Date(),
+    base_price: {{ site.listing.base_price }},
+    {% if site.listing.weekend_price %}
+    weekend_price: {{ site.listing.weekend_price }},
+    {% endif %}
+    cleaning_fee: {{ site.listing.cleaning_fee or 0 }},
+    nights: 0,
+    weekend_days: 0,
+    total_cost: 0
+}
+
+const checkin = document.getElementById('checkin');
+const checkout = document.getElementById('checkout');
+const nights = document.getElementById("nights");
+const nightly_cost = document.getElementById("nightly_cost");
+const weekend_cost = document.getElementById("weekend_cost");
+const total_cost = document.getElementById("total_cost");
+
+function weekendDays(date1, date2) {
+    let i = 0;
+    var d1 = new Date(date1),
+        d2 = new Date(date2),
+        isWeekend = false;
+
+    while (d1 < d2) {
+        var day = d1.getDay();
+        isWeekend = (day === 5) || (day === 6);
+        if (isWeekend) { i += 1 }
+        d1.setDate(d1.getDate() + 1);
+    }
+    return i;
+}
+
+function updateState() {
+    state.nights = (state.checkout.getTime() - state.checkin.getTime()) / (1000 * 3600 * 24);
+    if ('weekend_price' in state) {
+        state.weekend_days = weekendDays(state.checkin, state.checkout);
+        state.weekend_cost = (state.weekend_days) * state.weekend_price;
+    }
+    state.nightly_cost = (state.nights - state.weekend_days) * state.base_price;
+    state.total_cost = state.nightly_cost + state.weekend_cost + state.cleaning_fee;
+    renderSummary();
+}
+
+function changeDateHandler (e) {
+    const dates  = rangepicker.getDates();
+    state.checkin = dates[0] || new Date();
+    state.checkout = dates[1] || new Date();
+    updateState();
+}
+
+function renderSummary() {
+    nights.innerHTML = state.nights;
+    nightly_cost.innerHTML = `${state.nights - state.weekend_days} x $${state.base_price} = $${state.nightly_cost}`;
+    if ('weekend_price' in state) {
+        weekend_cost.innerHTML = `${state.weekend_days} x $${state.weekend_price} = $${state.weekend_cost}`;
+    }
+    total_cost.innerHTML = `$${state.total_cost}`
+}
+
+updateState();
+
+checkin.addEventListener('changeDate', changeDateHandler);
+checkout.addEventListener('changeDate', changeDateHandler);
+
 const phoneInputField = document.querySelector("#phone");
 const phoneInput = window.intlTelInput(phoneInputField, {
   utilsScript:
     "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
 });
-
 
 </script>
 {% endblock %}
