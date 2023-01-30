@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 from libreproperty.db import db
+from libreproperty.models import Listing, Booking
 
 
 class User(db.Model, UserMixin):
@@ -30,3 +31,10 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         """Check hashed password."""
         return check_password_hash(self.password, password)
+
+    @property
+    def bookings(self):
+        return db.session.execute(
+            db.select(Booking).join(Listing).filter_by(user_id=self.id).join(User)
+            .order_by(Booking.created_on.desc()).limit(10)
+        ).scalars()
