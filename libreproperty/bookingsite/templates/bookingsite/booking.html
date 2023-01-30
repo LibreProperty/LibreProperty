@@ -18,6 +18,12 @@
                     <h5 class="mb-0">Booking details</h5>
                 </div>
                 <div class="card-body">
+                    {% for category, message in get_flashed_messages(with_categories=True) %}
+                    <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
                     <form method="post">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <div class="mt-4 p-3 mb-3 border border-2 rounded border-color-translucent">
@@ -41,18 +47,12 @@
                                 </div>
                                 <div id="datepicker" class="input-group">
                                     <div class="form-floating">
-                                        <input id="checkin" type="text" name="checkin"
-                                               class="form-control datepicker-input"
-                                               autocomplete="off" {% if
-                                               checkin -%} value="{{checkin}}" {%- endif %}>
+                                        {{ form.checkin(class="form-control datepicker-input", autocomplete="off", type="text") }}
                                         <label for="checkin">Check-in</label>
                                     </div>
                                     <span class="input-group-text">to</span>
                                     <div class="form-floating">
-                                        <input id="checkout" type="text" name="checkout"
-                                               class="form-control datepicker-input"
-                                               autocomplete="off" {% if
-                                               checkout -%} value="{{ checkout }}" {%- endif %}>
+                                        {{ form.checkout(class="form-control datepicker-input", autocomplete="off", type="text") }}
                                         <label for="checkout">Check-out</label>
                                     </div>
                                     <div class="form-floating">
@@ -79,8 +79,7 @@
                                     {% include "form_field_errors.html" %}
                                     {% endwith %}
                                     <div class="form-floating">
-                                        <input type="text" name="first_name" class="form-control" id="first_name"
-                                               placeholder="First Name">
+                                        {{ form.first_name(class="form-control", placeholder="First Name") }}
                                         <label for="first_name">First Name</label>
                                     </div>
                                 </div>
@@ -89,7 +88,7 @@
                                     {% include "form_field_errors.html" %}
                                     {% endwith %}
                                     <div class="form-floating">
-                                        <input type="text" class="form-control" id="last_name" placeholder="Last Name">
+                                        {{ form.last_name(class="form-control", placeholder="Last Name") }}
                                         <label for="last_name">Last Name</label>
                                     </div>
                                 </div>
@@ -108,7 +107,7 @@
                                     {% with field=form.phone %}
                                     {% include "form_field_errors.html" %}
                                     {% endwith %}
-                                    <input type="tel" class="form-control" id="phone" placeholder="Phone number">
+                                    {{ form.phone(class="form-control", placeholder="Phone Number", type="tel") }}
                                 </div>
                             </div>
                             <div class="row mt-3">
@@ -117,7 +116,7 @@
                                     {% include "form_field_errors.html" %}
                                     {% endwith %}
                                     <div class="form-floating">
-                                        <textarea class="form-control" name="comments" id="comments" style="height: 100px;"></textarea>
+                                        {{ form.comments(class="form-control", style="height: 100px;") }}
                                         <label for="comments">Comments (Introduction, reason for stay, etc)</label>
                                     </div>
                                 </div>
@@ -241,6 +240,7 @@ function renderSummary() {
 }
 
 updateState();
+changeDateHandler();
 
 checkin.addEventListener('changeDate', changeDateHandler);
 checkout.addEventListener('changeDate', changeDateHandler);

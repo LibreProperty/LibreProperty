@@ -56,6 +56,7 @@ class Listing(db.Model, BasicMixin):
     deleted = sa.Column(sa.Boolean, default=False)
 
     website = relationship("Website", back_populates="listing", uselist=False)
+    bookings = relationship("Booking", back_populates="listing")
 
     @property
     def address(self):
@@ -106,6 +107,16 @@ class Website(db.Model, BasicMixin):
     @classmethod
     def count(cls, subdomain):
         return cls.query.filter_by(subdomain=subdomain).count()
-#        return db.session.execute(
-#            db.select(Website.id).filter(Website.subdomain == subdomain).count()
-#        )
+
+
+class Booking(db.Model, BasicMixin):
+    checkin = sa.Column(sa.Date)
+    checkout = sa.Column(sa.Date)
+    guests = sa.Column(sa.Integer)
+    first_name = sa.Column(sa.String)
+    last_name = sa.Column(sa.String)
+    email = sa.Column(sa.String)
+    phone = sa.Column(sa.String)
+    comments = sa.Column(sa.Text)
+    listing_id = sa.Column(sa.ForeignKey("listing.id"))
+    listing = relationship("Listing", back_populates="bookings")

@@ -3,7 +3,7 @@
 {% block content %}
 <main>
     <div class="row">
-        <div class="col-lg-8 col-12-sm">
+        <div class="col-lg-7 col-12-sm">
             {% for category, message in get_flashed_messages(with_categories=True) %}
             <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
                 {{ message }}
