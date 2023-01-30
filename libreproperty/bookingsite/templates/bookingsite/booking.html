@@ -23,6 +23,22 @@
                         <div class="mt-4 p-3 mb-3 border border-2 rounded border-color-translucent">
                             <h4 class="booking-section-heading text-center col-4 offset-4">Dates</h4>
                             <div class="row">
+                                <div class="col">
+                                    {% with field=form.checkin %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
+                                </div>
+                                <div class="col">
+                                    {% with field=form.checkout %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
+                                </div>
+
+                                <div class="col">
+                                    {% with field=form.guests %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
+                                </div>
                                 <div id="datepicker" class="input-group">
                                     <div class="form-floating">
                                         <input id="checkin" type="text" name="checkin"
@@ -59,6 +75,9 @@
                             <h4 class="booking-section-heading text-center col-4 offset-4">Guest Info</h4>
                             <div class="row">
                                 <div class="col">
+                                    {% with field=form.first_name %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
                                     <div class="form-floating">
                                         <input type="text" name="first_name" class="form-control" id="first_name"
                                                placeholder="First Name">
@@ -66,6 +85,9 @@
                                     </div>
                                 </div>
                                 <div class="col">
+                                    {% with field=form.last_name %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
                                     <div class="form-floating">
                                         <input type="text" class="form-control" id="last_name" placeholder="Last Name">
                                         <label for="last_name">Last Name</label>
@@ -74,21 +96,29 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col">
+                                    {% with field=form.email %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
                                     <div class="form-floating">
-                                        <input type="email" class="form-control" id="email"
-                                               placeholder="name@example.com">
+                                        {{ form.email(class="form-control", placeholder="Email") }}
                                         <label for="email">Email</label>
                                     </div>
                                 </div>
                                 <div class="col">
+                                    {% with field=form.phone %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
                                     <input type="tel" class="form-control" id="phone" placeholder="Phone number">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col">
+                                    {% with field=form.comments %}
+                                    {% include "form_field_errors.html" %}
+                                    {% endwith %}
                                     <div class="form-floating">
-                                        <textarea class="form-control" id="comments" style="height: 100px;"></textarea>
-                                        <label for="comments">Comments</label>
+                                        <textarea class="form-control" name="comments" id="comments" style="height: 100px;"></textarea>
+                                        <label for="comments">Comments (Introduction, reason for stay, etc)</label>
                                     </div>
                                 </div>
                             </div>
@@ -220,6 +250,8 @@ const phoneInput = window.intlTelInput(phoneInputField, {
   utilsScript:
     "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
 });
+
+
 
 </script>
 {% endblock %}
