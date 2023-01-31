@@ -1,5 +1,4 @@
 import datetime
-import urllib.parse
 import re
 
 from flask import current_app
@@ -9,6 +8,7 @@ from sqlalchemy.orm import declarative_base, relationship
 import sqlalchemy as sa
 
 from libreproperty.db import db
+from libreproperty.utils import count_weekend_nights
 
 Base = declarative_base()
 
@@ -70,6 +70,22 @@ class Listing(db.Model, BasicMixin):
     def state_verbose(self):
         return pycountry.subdivisions.get(code=self.state).name
 
+    def cost_cents(self, nights, weekend_nights):
+        if not self.weekend_price:
+            weekend_nights = 0
+            weekend_cost = 0
+        if self.weekend_price:
+            weekend_cost_cents = weekend_nights * self.weekend_price * 100
+
+        nightly_cost_dollar = (nights - weekend_nights) * self.base_price
+        nightly_cost = nightly_cost_dollar * 100
+        total_cost_cents = (self.cleaning_fee * 100) + (nightly_cost + weekend_cost)
+        if nights >= 30:
+            total_cost_cents = total_cost_cents * self.monthly_price_factor
+        elif 6 <= nights < 30:
+            total_cost_cents = total_cost_cents * self.weekly_price_factor
+        return total_cost_cents
+
 
 class Photo(db.Model, BasicMixin):
     location = sa.Column(sa.String, nullable=False)
@@ -118,5 +134,18 @@ class Booking(db.Model, BasicMixin):
     email = sa.Column(sa.String)
     phone = sa.Column(sa.String)
     comments = sa.Column(sa.Text)
+    amount_cents = sa.Column(sa.Integer)
     listing_id = sa.Column(sa.ForeignKey("listing.id"))
     listing = relationship("Listing", back_populates="bookings")
+
+    @property
+    def amount(self):
+        return self.amount_cents / 100.0
+
+    @property
+    def nights(self) -> int:
+        return (self.checkout - self.checkin).days
+
+    @property
+    def weekend_nights(self) -> int:
+        return count_weekend_nights(self.checkin, self.checkout)
