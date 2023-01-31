@@ -37,4 +37,4 @@ class User(db.Model, UserMixin):
         return db.session.execute(
             db.select(Booking).join(Listing).filter_by(user_id=self.id).join(User)
             .order_by(Booking.created_on.desc()).limit(10)
-        ).scalars()
+        ).scalars().all()
