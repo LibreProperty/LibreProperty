@@ -41,6 +41,7 @@ def booking(subdomain):
         booking_db = Booking()
         form.populate_obj(booking_db)
         booking_db.listing_id = site.listing.id
+        booking_db.amount_cents = site.listing.cost_cents(booking_db.nights, booking_db.weekend_nights)
         db.session.add(booking_db)
         db.session.commit()
         flash("Your request to book was submitted. Please wait for the host to respond before making any plans.", "success")

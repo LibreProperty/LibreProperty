@@ -50,7 +50,7 @@ class Listing(db.Model, BasicMixin):
     weekly_price_factor = sa.Column(sa.Numeric(precision=3, scale=1), default=1)
     # guests_included_in_regular_fee = sa.Column(sa.Integer)
     # extra_person_fee = sa.Column(sa.Integer)
-    cleaning_fee = sa.Column(sa.Integer)
+    cleaning_fee = sa.Column(sa.Integer, default=0)
     security_deposit = sa.Column(sa.Integer)
     is_listed = sa.Column(sa.Boolean, default=False)
     deleted = sa.Column(sa.Boolean, default=False)
@@ -73,17 +73,19 @@ class Listing(db.Model, BasicMixin):
     def cost_cents(self, nights, weekend_nights):
         if not self.weekend_price:
             weekend_nights = 0
-            weekend_cost = 0
+            weekend_cost_cents = 0
         if self.weekend_price:
             weekend_cost_cents = weekend_nights * self.weekend_price * 100
 
-        nightly_cost_dollar = (nights - weekend_nights) * self.base_price
-        nightly_cost = nightly_cost_dollar * 100
-        total_cost_cents = (self.cleaning_fee * 100) + (nightly_cost + weekend_cost)
+        nightly_cost = (nights - weekend_nights) * self.base_price * 100
+        cleaning_fee = self.cleaning_fee if self.cleaning_fee else 0
+        monthly_price_factor = self.monthly_price_factor if self.monthly_price_factor else 1
+        weekly_price_factor = self.weekly_price_factor if self.weekly_price_factor else 1
+        total_cost_cents = (cleaning_fee * 100) + (nightly_cost + weekend_cost_cents)
         if nights >= 30:
-            total_cost_cents = total_cost_cents * self.monthly_price_factor
-        elif 6 <= nights < 30:
-            total_cost_cents = total_cost_cents * self.weekly_price_factor
+            total_cost_cents = total_cost_cents * monthly_price_factor
+        elif 7 <= nights < 30:
+            total_cost_cents = total_cost_cents * weekly_price_factor
         return total_cost_cents
 
 

@@ -78,7 +78,7 @@
                             <td>{{ booking.listing.title }}</td>
                             <td>{{ booking.checkin }}</td>
                             <td>{{ booking.checkout }}</td>
-                            <td>{{ booking.amount }}</td>
+                            <td>{{ booking.amount }} ({{ booking.nights }}, {{ booking.weekend_nights }})</td>
                         </tr>
                         {% endfor %}
                     </table>
