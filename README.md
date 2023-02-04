@@ -15,6 +15,23 @@ ROADMAP:
 * Integrate with Smart Locks and send a unique code for each booking
 * Easily create a professional booking website for your property
 
+## Setting up a local development environment
+Start minio to be used instead of S3
+```sh
+./scripts/run-minio.sh
+```
+
+Start the local development server:
+```
+export AWS_ACCESS_KEY_ID=LIBREPROPERTY
+export AWS_SECRET_ACCESS_KEY=LIBREPROPERTY
+export SECRET_KEY=changemetosomethingsecret
+python server.py
+```
+
+You should now have a development environment running on
+[http://localhost:8888](http://localhost:8888).
+
 ## License
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
