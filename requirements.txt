@@ -8,3 +8,4 @@ psycopg2
 pycountry
 wtform_address
 Pillow
+boto3
