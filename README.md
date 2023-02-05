@@ -16,6 +16,13 @@ ROADMAP:
 * Easily create a professional booking website for your property
 
 ## Setting up a local development environment
+Create a virtualenv and install dependencies
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+pip3 install -r requirements.txt
+```
+
 Start minio to be used instead of S3
 ```sh
 ./scripts/run-minio.sh
