@@ -9,3 +9,4 @@ pycountry
 wtform_address
 Pillow
 boto3
+git+https://github.com/Ismar11/airbnb-python.git
