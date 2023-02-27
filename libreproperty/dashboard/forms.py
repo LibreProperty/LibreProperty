@@ -1,10 +1,11 @@
 import datetime
 import io
+import re
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, TextAreaField, IntegerField, SelectField, TimeField, SelectMultipleField, DecimalField, HiddenField, BooleanField
-from wtforms.validators import DataRequired, Length, Optional, ValidationError, Regexp
+from wtforms.validators import DataRequired, Length, Optional, ValidationError, Regexp, URL
 from wtforms import widgets
 from wtform_address import CountrySelectField, StateSelectField
 from markupsafe import Markup
@@ -29,6 +30,19 @@ def select_multi_checkbox(field, **kwargs):
         html.append(u'</div>')
     html.append(u'</div>')
     return Markup(u''.join(html))
+
+
+class ListingFromAirbnbForm(FlaskForm):
+    url = StringField(validators=[DataRequired(), URL()])
+    base_price = IntegerField(validators=[DataRequired()])
+    # TODO add better validation logic
+
+    def listing_id(self):
+        try:
+            return int(self.url.data)
+        except ValueError:
+            pattern = r"https://www\.airbnb\.com/rooms/(\d+)"
+            return re.search(pattern, self.url.data).group(1)
 
 
 class ListingForm(FlaskForm):

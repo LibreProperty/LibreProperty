@@ -1,4 +1,5 @@
 import logging
+import urllib.request
 from random import choice
 from string import ascii_lowercase
 
@@ -10,10 +11,11 @@ from werkzeug.utils import secure_filename
 from libreproperty.models import Listing, Photo, Website
 from libreproperty.s3 import get_s3_client
 from libreproperty import db
+from libreproperty import airbnb
 
 from .forms import (
     ListingForm, ListingPricingForm, ListingPropertyDetailsForm, ListingPhotoForm, ListingPhotoDeleteForm,
-    ListingDeleteForm, WebsiteForm
+    ListingDeleteForm, WebsiteForm, ListingFromAirbnbForm
 )
 
 dashboard_bp = Blueprint('dashboard_bp', __name__, template_folder='templates')
@@ -42,7 +44,36 @@ def create_listing():
     return render_template("dashboard/create_listing.html", form=form)
 
 
-def get_secure_listing(listing_id):
+@dashboard_bp.route("/create-listing-from-airbnb", methods=["GET", "POST"])
+@login_required
+def create_listing_from_airbnb():
+    form = ListingFromAirbnbForm()
+    if form.validate_on_submit():
+        airbnb_listing_id = form.listing_id()
+        airbnb_listing = airbnb.Listing.load(airbnb_listing_id)
+        listing = airbnb_listing.create_lp_listing()
+        listing.country = "US"
+        listing.user_id = current_user.id
+        listing.base_price = form.base_price.data
+        db.session.add(listing)
+        db.session.commit()
+        s3 = get_s3_client()
+        for airbnb_photo in airbnb_listing.photos:
+            photo_url = airbnb_photo.get("large_cover")
+            data = urllib.request.urlopen(photo_url)
+            bucket = current_app.config.get("BUCKET")
+            random_str = ''.join(choice(ascii_lowercase) for i in range(4))
+            key = f'{str(listing.id)}-{random_str}-{airbnb_photo.get("id", "no-id")}'
+            s3.upload_fileobj(data, bucket, key)
+            location = f"s3://{bucket}/{key}"
+            photo = Photo(location=location, caption=airbnb_photo.get("caption", ""), listing_id=listing.id)
+            db.session.add(photo)
+        db.session.commit()
+        return redirect(url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id))
+    return render_template("dashboard/create_listing.html", form=form)
+
+
+def get_secure_listing(listing_id) -> Listing:
     l_id = int(listing_id)
     listing = db.session.execute(db.select(Listing).filter(
         Listing.id == l_id)).scalar()
@@ -51,7 +82,7 @@ def get_secure_listing(listing_id):
     return listing
 
 
-def get_secure_photo(photo_id):
+def get_secure_photo(photo_id) -> Photo:
     p_id = int(photo_id)
     photo = db.session.execute(db.select(Photo).filter(
         Photo.id == p_id)).scalar()
@@ -60,7 +91,7 @@ def get_secure_photo(photo_id):
     return photo
 
 
-def get_secure_website(website_id):
+def get_secure_website(website_id) -> Website:
     w_id = int(website_id)
     website = db.session.execute(db.select(Website).filter(
         Website.id == w_id)).scalar()
