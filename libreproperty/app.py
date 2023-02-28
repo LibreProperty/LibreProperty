@@ -34,9 +34,7 @@ def environ_get_bool(name: str) -> bool:
     return os.getenv(name, 'False').lower() in ('true', '1', 't')
 
 
-def create_app():
-    app = Flask(__name__, subdomain_matching=True)
-    app.jinja_env.filters["quote_plus"] = urllib.parse.quote_plus
+def config_app(app: Flask) -> Flask:
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE", "sqlite:///project.db")
     app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", os.urandom(32))
     # Minio endpoint or `aws`
@@ -44,6 +42,13 @@ def create_app():
     app.config['S3_VERIFY'] = environ_get_bool("S3_VERIFY")
     app.config['BUCKET'] = os.environ.get("BUCKET", "libreproperty-images")
     app.config['SERVER_NAME'] = os.environ.get("SERVER_NAME", "localhost:8888")
+    return app
+
+
+def create_app():
+    app = Flask(__name__, subdomain_matching=True)
+    app.jinja_env.filters["quote_plus"] = urllib.parse.quote_plus
+    app = config_app(app)
     CSRFProtect(app)
     app.register_blueprint(auth_bp)
     login_manager.init_app(app)
@@ -54,6 +59,14 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         db.create_all()
-        users = User.query.all()
-        print(users)
+        return app
+
+
+def create_huey_app():
+    app = Flask("flask-huey-app")
+    app = config_app(app)
+    from libreproperty import db
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
         return app

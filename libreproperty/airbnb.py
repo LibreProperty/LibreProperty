@@ -1,8 +1,16 @@
+import urllib
+from random import choice
+from string import ascii_lowercase
+
 import airbnb
 from typing import Mapping
 from dataclasses import dataclass
+from flask import current_app
 
 from libreproperty import models
+from libreproperty.db import db
+from libreproperty.models import Photo
+from libreproperty.s3 import get_s3_client
 
 
 @dataclass

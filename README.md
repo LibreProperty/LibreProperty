@@ -23,9 +23,9 @@ source .venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
-Start minio to be used instead of S3
+Start minio to be used instead of S3 and redis:
 ```sh
-./scripts/run-minio.sh
+./scripts/run-dev-services.sh
 ```
 
 Start the local development server:
@@ -38,6 +38,13 @@ python server.py
 
 You should now have a development environment running on
 [http://localhost:8888](http://localhost:8888).
+
+Start Huey for background tasks execution:
+```sh
+export AWS_ACCESS_KEY_ID=LIBREPROPERTY
+export AWS_SECRET_ACCESS_KEY=LIBREPROPERTY
+huey_consumer.py libreproperty.tasks.tasks.huey -w 2 -v
+```
 
 ## License
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)

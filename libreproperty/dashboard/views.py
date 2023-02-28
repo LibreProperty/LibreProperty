@@ -1,5 +1,4 @@
 import logging
-import urllib.request
 from random import choice
 from string import ascii_lowercase
 
@@ -10,6 +9,7 @@ from werkzeug.utils import secure_filename
 
 from libreproperty.models import Listing, Photo, Website
 from libreproperty.s3 import get_s3_client
+from libreproperty.tasks.tasks import store_airbnb_photos
 from libreproperty import db
 from libreproperty import airbnb
 
@@ -57,19 +57,10 @@ def create_listing_from_airbnb():
         listing.base_price = form.base_price.data
         db.session.add(listing)
         db.session.commit()
-        s3 = get_s3_client()
-        for airbnb_photo in airbnb_listing.photos:
-            photo_url = airbnb_photo.get("large_cover")
-            data = urllib.request.urlopen(photo_url)
-            bucket = current_app.config.get("BUCKET")
-            random_str = ''.join(choice(ascii_lowercase) for i in range(4))
-            key = f'{str(listing.id)}-{random_str}-{airbnb_photo.get("id", "no-id")}'
-            s3.upload_fileobj(data, bucket, key)
-            location = f"s3://{bucket}/{key}"
-            photo = Photo(location=location, caption=airbnb_photo.get("caption", ""), listing_id=listing.id)
-            db.session.add(photo)
-        db.session.commit()
-        return redirect(url_for('dashboard_bp.update_listing_pricing', listing_id=listing.id))
+        result = store_airbnb_photos(listing_id=listing.id, photos=airbnb_listing.photos)
+        logging.info(f"Created task to store airbnb photos for listing {listing.id}: {result}")
+        flash('Import was successful. Please wait a minute or so while photos are imported.', 'success')
+        return redirect(url_for('dashboard_bp.update_listing', listing_id=listing.id))
     return render_template("dashboard/create_listing.html", form=form)
 
 
