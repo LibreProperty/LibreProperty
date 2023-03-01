@@ -60,14 +60,14 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-lg-6 col-12-sm">
+        <div class="col-lg-8 col-12-sm">
             <h1>{{ site.listing.title }}</h1>
             {% for description in site.listing.description.split("\n") %}
             <p>{{ description }}</p>
             {% endfor %}
 
         </div>
-        <div class="col-lg-6 col-12-sm">
+        <div class="col-lg-4 col-12-sm">
             {% if site.address_visible %}
             <h3>Location</h3>
             <iframe
@@ -82,10 +82,15 @@
             </iframe>
             {% endif %}
             <h3>Amenities</h3>
-
+            <ul>
             {% for amenity in site.listing.amenities %}
-            {{ amenity }}
+            {% if 'name' in amenity %}
+            <li>{{ amenity["name"] }}</li>
+            {% else %}
+            <li>{{ amenity }}</li>
+            {% endif %}
             {% endfor %}
+            </ul>
         </div>
     </div>
 </main>
