@@ -204,6 +204,9 @@ def create_website(listing_id):
         return redirect(url_for('dashboard_bp.update_website', listing_id=listing_id, website_id=listing.website.id))
     form = WebsiteForm()
     if form.validate_on_submit():
+        if not listing.state or not listing.street or not listing.city:
+            flash("Please add your full address including state, street and city before creating a website.", "danger")
+            return redirect(url_for('dashboard_bp.update_listing', listing_id=listing_id))
         website = Website()
         website.listing_id = listing.id
         form.populate_obj(website)
