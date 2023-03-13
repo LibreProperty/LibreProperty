@@ -59,6 +59,7 @@
             {% endif %}
         </div>
         <div class="col-5 d-none d-sm-block">
+
             <div class="card mb-4">
                 <div class="card-header py-3">
                     <h5 class="mb-0">Recent bookings</h5>
@@ -86,7 +87,39 @@
                         {% endfor %}
                     </table>
                     {% else %}
-                    <p>There are no bookings yet in any of your listings, but don't give up hope. You might get one soon.</p>
+                    <p>There are no bookings yet in any of your listings, but don't give up hope. You might get one
+                        soon.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h5 class="mb-0">Recent Messages</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.messages|length > 0 %}
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">Created</th>
+                            <th scope="col">Listing</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Comment</th>
+                        </tr>
+                        </thead>
+                        {% for message in current_user.messages %}
+                        <tr>
+                            <td>{{ message.created_on }}</td>
+                            <td>{{ message.listing.title }}</td>
+                            <td>{{ message.first_name }}</td>
+                            <td>{{ message.last_name }}</td>
+                            <td>{{ message.comments|truncate(36) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    {% else %}
+                    <p>There are no messages yet in any of your listings yet.</p>
                     {% endif %}
                 </div>
             </div>

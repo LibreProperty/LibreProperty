@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 from libreproperty.db import db
-from libreproperty.models import Listing, Booking
+from libreproperty.models import Listing, Booking, Message
 
 
 class User(db.Model, UserMixin):
@@ -37,4 +37,11 @@ class User(db.Model, UserMixin):
         return db.session.execute(
             db.select(Booking).join(Listing).filter_by(user_id=self.id).join(User)
             .order_by(Booking.created_on.desc()).limit(10)
+        ).scalars().all()
+
+    @property
+    def messages(self):
+        return db.session.execute(
+            db.select(Message).join(Listing).filter_by(user_id=self.id).join(User)
+            .order_by(Message.created_on.desc()).limit(10)
         ).scalars().all()
