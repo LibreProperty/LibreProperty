@@ -53,7 +53,8 @@
                 </table>
                 <a class="btn btn-success float-start" href="{{ url_for('dashboard_bp.create_listing') }}">
                     Create another listing</a>
-                <a class="btn btn-success float-start" href="{{ url_for('dashboard_bp.create_listing_from_airbnb') }}">
+                <span class="m-3 fs-5">or</span>
+                <a class="btn btn-airbnb" href="{{ url_for('dashboard_bp.create_listing_from_airbnb') }}">
                     Import listing from Airbnb</a>
             </div>
             {% endif %}

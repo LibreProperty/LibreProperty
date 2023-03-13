@@ -8,9 +8,13 @@
             <h2>Create a listing</h2>
             <p>
                 A listing allows you to create a dedicated booking website for your
-                property. You will also be able to sync it to other channels such as
+                property. In the future, you will also be able to sync it to other channels such as
                 Airbnb, Vrbo and others.
             </p>
+
+            <p>Already have a listing on <b>Airbnb</b>?<br/> You can save time by:</p>
+            <a class="btn btn-airbnb" href="{{ url_for('dashboard_bp.create_listing_from_airbnb') }}">
+                Importing listing from Airbnb</a>
         </div>
         <div class="col-8">
             {% for message in get_flashed_messages() %}

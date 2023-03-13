@@ -25,3 +25,49 @@
     top: -27px;
     background: #fff;
 }
+
+.btn-airbnb {
+  color: #ffffff;
+  background-color: #FF5A5F;
+  border-color: #F20008;
+}
+
+.btn-airbnb:hover,
+.btn-airbnb:focus,
+.btn-airbnb:active,
+.btn-airbnb.active,
+.open .dropdown-toggle.btn-airbnb {
+  color: #ffffff;
+  background-color: #FA7F84;
+  border-color: #F20008;
+}
+
+.btn-airbnb:active,
+.btn-airbnb.active,
+.open .dropdown-toggle.btn-airbnb {
+  background-image: none;
+}
+
+.btn-airbnb.disabled,
+.btn-airbnb[disabled],
+fieldset[disabled] .btn-airbnb,
+.btn-airbnb.disabled:hover,
+.btn-airbnb[disabled]:hover,
+fieldset[disabled] .btn-airbnb:hover,
+.btn-airbnb.disabled:focus,
+.btn-airbnb[disabled]:focus,
+fieldset[disabled] .btn-airbnb:focus,
+.btn-airbnb.disabled:active,
+.btn-airbnb[disabled]:active,
+fieldset[disabled] .btn-airbnb:active,
+.btn-airbnb.disabled.active,
+.btn-airbnb[disabled].active,
+fieldset[disabled] .btn-airbnb.active {
+  background-color: #FF5A5F;
+  border-color: #F20008;
+}
+
+.btn-airbnb .badge {
+  color: #FF5A5F;
+  background-color: #ffffff;
+}
