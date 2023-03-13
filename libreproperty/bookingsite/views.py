@@ -2,8 +2,8 @@ import datetime
 
 from flask import Blueprint, render_template, abort, request, redirect, url_for, flash
 
-from libreproperty.models import Website, Booking, db
-from .forms import BookingForm
+from libreproperty.models import Website, Booking, Message, db
+from .forms import BookingForm, ContactForm
 
 bookingsite_bp = Blueprint('bookingsite_bp', __name__, template_folder='templates')
 
@@ -53,3 +53,18 @@ def booking(subdomain):
     form.checkout.data = datetime.datetime.strptime(checkout, "%m/%d/%Y") if checkout else None
     form.guests.data = guests
     return render_template("bookingsite/booking.html", site=site, form=form)
+
+
+@bookingsite_bp.route("/contact", subdomain="<subdomain>", methods=["GET", "POST"])
+def contact(subdomain):
+    site = get_site_or_404(subdomain)
+    form = ContactForm()
+    if form.validate_on_submit():
+        message_db = Message()
+        form.populate_obj(message_db)
+        message_db.listing_id = site.listing.id
+        db.session.add(message_db)
+        db.session.commit()
+        flash("Your message has been submitted. The host will get back to you as soon as possible.", "success")
+        return redirect(url_for('bookingsite_bp.contact', subdomain=site.subdomain))
+    return render_template("bookingsite/contact.html", site=site, form=form)

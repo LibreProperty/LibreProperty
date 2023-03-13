@@ -1,0 +1,102 @@
+{% extends 'bookingsite/base.html' %}
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"
+        integrity="sha512-+gShyB8GWoOiXNwOlBaYXdLTiZt10Iy6xjACGadpqMs20aJOoh+PJt3bwUVA6Cefe7yF7vblX6QwyXZiVwTWGg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"
+      integrity="sha512-gxWow8Mo6q6pLa1XH/CcH8JyiSDEtiwJV78E+D+QP0EVasFs8wKXq16G8CLD4CJ2SnonHr4Lm/yY2fSI2+cbmw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% endblock %}
+{% block content %}
+<main>
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h5 class="mb-0">Contact</h5>
+                </div>
+                <div class="card-body">
+                    {% for category, message in get_flashed_messages(with_categories=True) %}
+                    <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    <form method="post">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                        <div class="row">
+                            <div class="col">
+                                {% with field=form.first_name %}
+                                {% include "form_field_errors.html" %}
+                                {% endwith %}
+                                <div class="form-floating">
+                                    {{ form.first_name(class="form-control", placeholder="First Name") }}
+                                    <label for="first_name">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {% with field=form.last_name %}
+                                {% include "form_field_errors.html" %}
+                                {% endwith %}
+                                <div class="form-floating">
+                                    {{ form.last_name(class="form-control", placeholder="Last Name") }}
+                                    <label for="last_name">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                {% with field=form.email %}
+                                {% include "form_field_errors.html" %}
+                                {% endwith %}
+                                <div class="form-floating">
+                                    {{ form.email(class="form-control", placeholder="Email") }}
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                {% with field=form.phone %}
+                                {% include "form_field_errors.html" %}
+                                {% endwith %}
+                                {{ form.phone(class="form-control", placeholder="Phone Number", type="tel") }}
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                {% with field=form.comments %}
+                                {% include "form_field_errors.html" %}
+                                {% endwith %}
+                                <div class="form-floating">
+                                    {{ form.comments(class="form-control", style="height: 100px;") }}
+                                    <label for="comments">Comments</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary float-end mt-2" type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card mb-4">
+                <div class="card-header py-3">
+                    <h5 class="mb-0">Help</h5>
+                </div>
+                <div class="card-body">
+                    Send us a message by using submitting the form and we will get back to you as soon as possible
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+const phoneInputField = document.querySelector("#phone");
+const phoneInput = window.intlTelInput(phoneInputField, {
+  utilsScript:
+    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+});
+
+
+</script>
+{% endblock %}

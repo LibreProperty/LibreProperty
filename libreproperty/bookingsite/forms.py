@@ -13,3 +13,11 @@ class BookingForm(FlaskForm):
     email = EmailField(validators=[DataRequired("Please provide a valid email address")])
     phone = StringField(validators=[DataRequired("Please provide a phone number")])
     comments = TextAreaField(validators=[DataRequired("Please provide a short introduction and reason for your stay")])
+
+
+class ContactForm(FlaskForm):
+    first_name = StringField(validators=[DataRequired("Please provide your first name")])
+    last_name = StringField(validators=[DataRequired("Please provide your last name")])
+    email = EmailField(validators=[DataRequired("Please provide a valid email address")])
+    phone = StringField(validators=[DataRequired("Please provide a phone number")])
+    comments = TextAreaField(validators=[DataRequired("Please provide a short introduction and reason for your stay")])

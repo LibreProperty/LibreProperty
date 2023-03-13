@@ -57,6 +57,7 @@ class Listing(db.Model, BasicMixin):
 
     website = relationship("Website", back_populates="listing", uselist=False)
     bookings = relationship("Booking", back_populates="listing")
+    messages = relationship("Message", back_populates="listing")
 
     @property
     def address(self):
@@ -151,3 +152,13 @@ class Booking(db.Model, BasicMixin):
     @property
     def weekend_nights(self) -> int:
         return count_weekend_nights(self.checkin, self.checkout)
+
+
+class Message(db.Model, BasicMixin):
+    first_name = sa.Column(sa.String)
+    last_name = sa.Column(sa.String)
+    email = sa.Column(sa.String)
+    phone = sa.Column(sa.String)
+    comments = sa.Column(sa.Text)
+    listing_id = sa.Column(sa.ForeignKey("listing.id"))
+    listing = relationship("Listing", back_populates="messages")
