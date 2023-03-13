@@ -61,7 +61,7 @@ def create_listing_from_airbnb():
         logging.info(f"Created task to store airbnb photos for listing {listing.id}: {result}")
         flash('Import was successful. Please wait a minute or so while photos are imported.', 'success')
         return redirect(url_for('dashboard_bp.update_listing', listing_id=listing.id))
-    return render_template("dashboard/create_listing.html", form=form)
+    return render_template("dashboard/create_listing_from_airbnb.html", form=form)
 
 
 def get_secure_listing(listing_id) -> Listing:

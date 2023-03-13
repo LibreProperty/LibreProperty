@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<main>
+    <div class="row">
+        <div class="col-5">
+            <h2>Import a listing from Airbnb</h2>
+            <p class="fs-5">
+                A listing allows you to create a dedicated booking website for your
+                property. In the future, you will also be able to sync it to other channels such as
+                Airbnb, Vrbo and others.
+            </p>
+
+            <p>Simply provide us with your listing URL and the base price and then all your images and basic
+            details will automatically be imported. No username or password required.</p>
+            <p>Your URL should look like this: https://www.airbnb.com/rooms/2076544<br/>The end of the URL needs
+            to include your listing ID. In the above example, the listing ID is 2076544.</p>
+        </div>
+        <div class="col-7">
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% include 'dashboard/listing_basic_form.html' %}
+        </div>
+    </div>
+</main>
+{% endblock %}
