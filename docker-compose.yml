@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+  web:
+    image: libreproperty
+    build: .
+    environment:
+      SERVER_NAME: "localhost:8080"
+      AWS_ACCESS_KEY_ID: LIBREPROPERTY
+      AWS_SECRET_ACCESS_KEY: LIBREPROPERTY
+      DATABASE: postgresql://postgres:libreproperty@postgres:5432/libreproperty
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      S3_ENDPOINT: http://s3:9000
+      SECRET_KEY: changemetosomethingsecret
+    ports:
+      - "127.0.0.1:8080:8080"
+  huey:
+    image: libreproperty
+    environment:
+      DATABASE: postgresql://postgres:libreproperty@postgres:5432/libreproperty
+      S3_ENDPOINT: http://s3:9000
+      AWS_ACCESS_KEY_ID: LIBREPROPERTY
+      AWS_SECRET_ACCESS_KEY: LIBREPROPERTY
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    command: huey_consumer.py libreproperty.tasks.tasks.huey -w 2
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: libreproperty
+      POSTGRES_DB: libreproperty
+  redis:
+    image: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+  s3:
+    restart: always
+    image: quay.io/minio/minio
+    ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - ./minio-storage:/data
+    environment:
+      MINIO_ROOT_USER: LIBREPROPERTY
+      MINIO_ROOT_PASSWORD: LIBREPROPERTY
+    command: server --address 0.0.0.0:9000 /data
+
+volumes:
+  pgdata:

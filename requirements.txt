@@ -13,3 +13,4 @@ git+https://github.com/Ismar11/airbnb-python.git
 huey
 redis
 gevent
+alembic

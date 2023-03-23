@@ -11,11 +11,11 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY requirements.txt ./
 
-RUN apt update && apt install -y libpq-dev gcc \
+RUN apt update && apt install -y libpq-dev gcc git \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir -r requirements.txt \
-    && apt autoremove -y gcc
+    && apt autoremove -y gcc git
 
 COPY . ./
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 server:app
+CMD alembic upgrade head; exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 server:app

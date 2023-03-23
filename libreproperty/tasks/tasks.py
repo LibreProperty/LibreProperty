@@ -10,12 +10,16 @@ from libreproperty.db import db
 from libreproperty.models import Photo
 from libreproperty.s3 import get_s3_client
 
-huey = RedisHuey(host=os.getenv('REDIS_HOST', "localhost"))
+huey = RedisHuey(
+    host=os.getenv('REDIS_HOST', "localhost"),
+    port=int(os.getenv("REDIS_PORT", 6379))
+)
 
+logger = logging.getLogger("huey")
 
 @huey.task()
 def store_airbnb_photos(listing_id: int, photos: list[Mapping[str, str]]):
-    logging.info(f"Storing airbnb photos for listing {listing_id}")
+    logger.info(f"Storing airbnb photos for listing {listing_id}")
     from libreproperty.app import create_huey_app
     app = create_huey_app()
     with app.app_context():
@@ -30,6 +34,6 @@ def store_airbnb_photos(listing_id: int, photos: list[Mapping[str, str]]):
             location = f"s3://{bucket}/{key}"
             photo = Photo(location=location, caption=airbnb_photo.get("caption", ""), listing_id=listing_id)
             db.session.add(photo)
-            logging.info(f"Added photo {location} to listing {listing_id}")
+            logger.info(f"Added photo {location} to listing {listing_id}")
         db.session.commit()
-    logging.info(f"Finished storing airbnb photos for listing {listing_id}")
+    logger.info(f"Finished storing airbnb photos for listing {listing_id}")

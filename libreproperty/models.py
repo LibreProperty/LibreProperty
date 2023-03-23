@@ -4,13 +4,11 @@ import re
 from flask import current_app
 import pycountry
 from sqlalchemy.sql import func
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 import sqlalchemy as sa
 
 from libreproperty.db import db
 from libreproperty.utils import count_weekend_nights
-
-Base = declarative_base()
 
 
 class BasicMixin(object):
@@ -111,7 +109,7 @@ class Photo(db.Model, BasicMixin):
             # TODO: check if regional buckets are needed/supported
             return f'https://{self.bucket}.s3.amazonaws.com/{self.object_key}'
         else:
-            base = current_app.config.get("S3_ENDPOINT")
+            base = "http://localhost:9000"
             return f'{base}/{self.bucket}/{self.object_key}'
 
 
